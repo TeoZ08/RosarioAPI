@@ -16,6 +16,50 @@
   padding: 0 1rem;
 }
 
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.mystery-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--color-gold-metallic);
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.mystery-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-back:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
 /* Botão Reiniciar */
 .btn-restart {
   background: rgba(255, 255, 255, 0.05);
@@ -33,46 +77,11 @@
 }
 .btn-restart:hover {
   background: rgba(212, 175, 55, 0.1);
-  transform: rotate(180deg); /* Efeito legal de girar ao passar o mouse */
+  transform: rotate(180deg);
   border-color: var(--color-gold-metallic);
 }
 
-/* ... (Mantenha estilos do Header Titles e Btn Back anteriores) ... */
-.header-titles {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-}
-.mystery-title {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  color: var(--color-gold-metallic);
-  margin: 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  font-weight: 500;
-}
-.mystery-subtitle {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-  font-style: italic;
-  letter-spacing: 1px;
-}
-.btn-back {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--color-text-secondary);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* --- WORKSPACE (NOVO LAYOUT) --- */
+/* --- WORKSPACE (LAYOUT PRINCIPAL) --- */
 .prayer-workspace {
   display: flex;
   flex-direction: row; /* Lado a lado */
@@ -85,7 +94,7 @@
 }
 
 .card-column {
-  flex: 1; /* Ocupa o máximo de espaço possível */
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,8 +110,8 @@
 
 /* --- SIDEBAR DE ATALHOS --- */
 .shortcuts-sidebar {
-  width: 140px; /* Largura fixa para a barra */
-  flex-shrink: 0; /* Não encolhe */
+  width: 140px;
+  flex-shrink: 0;
   background: var(--color-bg-card);
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
@@ -114,7 +123,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  position: sticky; /* Fica fixo ao rolar se a tela for alta */
+  position: sticky;
   top: 2rem;
 }
 
@@ -128,7 +137,7 @@
 
 .shortcuts-grid {
   display: grid;
-  grid-template-columns: 1fr; /* Uma coluna de botões */
+  grid-template-columns: 1fr;
   gap: 0.8rem;
   width: 100%;
 }
@@ -144,13 +153,11 @@
   font-size: 1rem;
   transition: all 0.2s;
 }
-
 .btn-shortcut:hover {
   background: rgba(212, 175, 55, 0.1);
   border-color: var(--color-gold-dim);
   color: var(--color-gold-metallic);
 }
-
 .btn-shortcut.active {
   background: linear-gradient(
     135deg,
@@ -184,7 +191,7 @@
   color: var(--color-text-primary);
 }
 
-/* ... (Mantenha estilos do Card Principal e Footer) ... */
+/* --- CARTÃO DE ORAÇÃO --- */
 .glass-panel {
   background: var(--color-bg-card);
   backdrop-filter: var(--backdrop-blur);
@@ -200,6 +207,7 @@
   flex-direction: column;
   justify-content: center;
 }
+
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -208,11 +216,13 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 0.8rem;
 }
+
 .step-indicator {
   font-size: 0.85rem;
   color: var(--color-text-secondary);
   font-family: monospace;
 }
+
 .prayer-type-tag {
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -223,6 +233,7 @@
   border-radius: 20px;
   background: rgba(212, 175, 55, 0.05);
 }
+
 .prayer-title {
   font-family: var(--font-display);
   font-size: 2.4rem;
@@ -230,6 +241,7 @@
   margin: 0.5rem 0 1.5rem 0;
   line-height: 1.2;
 }
+
 .prayer-text {
   font-family: var(--font-body);
   font-size: 1.35rem;
@@ -238,10 +250,14 @@
   max-width: 60ch;
   margin: 0 auto;
 }
+
+/* --- FOOTER E CONTROLES (RESTAURADOS) --- */
 .board-footer {
   width: 100%;
+  max-width: 700px;
   margin-top: 1rem;
 }
+
 .progress-track {
   height: 4px;
   background: rgba(255, 255, 255, 0.1);
@@ -250,6 +266,7 @@
   border-radius: 4px;
   overflow: hidden;
 }
+
 .progress-fill {
   height: 100%;
   background: linear-gradient(
@@ -260,21 +277,86 @@
   box-shadow: 0 0 10px var(--color-gold-metallic);
 }
 
+/* Container dos botões */
+.controls-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+/* Estilo Base dos Botões de Navegação */
+.btn-nav {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.btn-nav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+/* Botão Anterior: Sutil, Outline */
+.btn-prev {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-text-secondary);
+}
+.btn-prev:hover:not(:disabled) {
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Botão Próximo: Destaque, Sólido, Dourado */
+.btn-next {
+  background: linear-gradient(
+    135deg,
+    var(--color-gold-metallic) 0%,
+    #b08d28 100%
+  );
+  border: none;
+  color: #0f172a;
+  font-weight: 700;
+  flex-grow: 1; /* Ocupa mais espaço */
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25);
+}
+.btn-next:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4);
+  filter: brightness(1.1);
+}
+.btn-next .icon {
+  font-weight: bold;
+}
+
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 850px) {
   .prayer-workspace {
-    flex-direction: column; /* Empilha no celular */
+    flex-direction: column;
     align-items: center;
   }
 
   .shortcuts-sidebar {
-    width: 100%; /* Ocupa largura total */
-    flex-direction: row; /* Botões na horizontal */
+    width: 100%;
+    flex-direction: row;
     justify-content: center;
-    position: static; /* Remove sticky */
+    position: static;
     padding: 1rem;
-    order: 2; /* Coloca ATRAI do card (ou use order: -1 para colocar acima) */
+    order: 2;
     flex-wrap: wrap;
+    margin-top: 1rem;
   }
 
   .shortcuts-grid {
