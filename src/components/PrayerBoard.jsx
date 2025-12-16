@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import InteractiveRosary from "./InteractiveRosary";
 import Controls from "./Controls";
 import { generateRosarySequence } from "../utils/rosaryEngine";
@@ -16,7 +16,6 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     return generateRosarySequence(mysteryData?.mysteries || []);
   }, [mysteryData]);
 
-  // Encontra os índices onde começam os mistérios para criar os atalhos
   const mysteryIndices = useMemo(() => {
     return fullSequence
       .map((item, index) => (item.type === "misterio" ? index : -1))
@@ -30,15 +29,16 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     localStorage.setItem("rosaryDay", day);
   }, [step, day]);
 
-  const handleNext = () => {
+  // Função "memorizada" para evitar recriação desnecessária
+  const handleNext = useCallback(() => {
     if (step < fullSequence.length - 1) setStep((s) => s + 1);
-  };
+  }, [step, fullSequence.length]);
 
-  const handlePrev = () => {
+  // Função "memorizada"
+  const handlePrev = useCallback(() => {
     if (step > 0) setStep((s) => s - 1);
-  };
+  }, [step]);
 
-  // Função para pular para qualquer conta (clique na bolinha ou atalho)
   const handleJumpTo = (index) => {
     setStep(index);
   };
@@ -49,6 +49,8 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     }
   };
 
+  // CORREÇÃO DAS DEPENDÊNCIAS DO useEffect
+  // Agora dependemos apenas das funções estáveis handleNext e handlePrev
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowRight" || e.key === " ") handleNext();
@@ -56,7 +58,7 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [step, fullSequence]);
+  }, [handleNext, handlePrev]);
 
   const progress = ((step + 1) / fullSequence.length) * 100;
 
@@ -112,6 +114,8 @@ function PrayerBoard({ day, mysteryData, onBack }) {
   const headerInfo = formatFullTitle();
 
   return (
+    // CORREÇÃO DO MOTION: Trocamos <div> por <motion.div> aqui na raiz.
+    // Isso força o uso da variável 'motion' e restaura a animação de entrada da página.
     <motion.div
       className="prayer-board"
       initial={{ opacity: 0 }}
@@ -128,7 +132,6 @@ function PrayerBoard({ day, mysteryData, onBack }) {
           <span className="mystery-subtitle">{headerInfo.subtitle}</span>
         </div>
 
-        {/* Botão de Reiniciar (Lado Direito) */}
         <button
           onClick={handleRestart}
           className="btn-restart"
@@ -142,13 +145,11 @@ function PrayerBoard({ day, mysteryData, onBack }) {
         <InteractiveRosary
           currentStep={step}
           sequence={fullSequence}
-          onBeadClick={handleJumpTo} // Passando a função de clique
+          onBeadClick={handleJumpTo}
         />
       </div>
 
-      {/* WORKSPACE: Área que divide o Card e a Barra Lateral */}
       <div className="prayer-workspace">
-        {/* Coluna Principal (Card) */}
         <div className="card-column">
           <div className="card-container">
             <AnimatePresence mode="wait">
@@ -204,13 +205,10 @@ function PrayerBoard({ day, mysteryData, onBack }) {
           </footer>
         </div>
 
-        {/* Coluna Lateral (Atalhos) */}
         <aside className="shortcuts-sidebar glass-panel-sm">
           <span className="sidebar-title">Ir para Mistério</span>
           <div className="shortcuts-grid">
             {mysteryIndices.map((idx, i) => {
-              // Verifica se o passo atual está dentro deste mistério (para destacar o botão)
-              // O mistério atual vai do índice deste mistério até o próximo (ou fim)
               const nextIdx = mysteryIndices[i + 1] || fullSequence.length;
               const isActive = step >= idx && step < nextIdx;
 
