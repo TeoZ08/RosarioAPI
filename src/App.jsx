@@ -67,7 +67,7 @@ function App() {
       {!selectedDay ? (
         <DaySelector
           onSelectDay={handleSelectDay}
-          todayMystery={apiData ? apiData.mystery : "Carregando..."}
+          todayMystery={apiData ? apiData.mystery : null}
         />
       ) : (
         <PrayerBoard
