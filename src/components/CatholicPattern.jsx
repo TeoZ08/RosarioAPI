@@ -25,7 +25,7 @@ export const GothicRosePattern = ({
         />
         <circle
           cx="30"
-          Cy="30"
+          cy="30"
           r="12"
           fill="none"
           stroke={color}

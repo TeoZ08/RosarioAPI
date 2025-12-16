@@ -32,7 +32,7 @@ function InteractiveRosary({ currentStep, sequence }) {
         <div className="beads-wrapper">
           {sequence.map((item, index) => {
             const isActive = index === currentStep;
-            constisPast = index < currentStep;
+            const isPast = index < currentStep; // <--- CORRIGIDO AQUI (Adicionei o espaço)
 
             let beadClass = "bead";
             if (item.type === "conta-grande" || item.type === "pai-nosso")
