@@ -1,0 +1,99 @@
+.prayer-board {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header-board {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  padding-bottom: 1rem;
+}
+
+.header-info h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.2rem;
+}
+
+.mystery-tag {
+  font-family: var(--font-body);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-back {
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-sm);
+}
+.btn-back:hover {
+  border-color: var(--color-text-primary);
+  color: var(--color-text-primary);
+}
+
+/* O Cartão Principal da Oração */
+.prayer-card {
+  background-color: var(--color-bg-secondary);
+  padding: 2.5rem;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-subtle);
+  text-align: center;
+  position: relative;
+  /* Uma borda sutil dourada */
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.step-counter {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.8rem;
+  color: var(--color-accent-gold-dim);
+  font-weight: bold;
+}
+
+.prayer-title {
+  font-size: 2.2rem;
+  margin: 1.5rem 0;
+  color: var(--color-accent-gold);
+}
+
+.prayer-content {
+  font-size: 1.2rem; /* Texto maior para facilitar leitura */
+  line-height: 1.8;
+  color: var(--color-text-primary);
+  margin-bottom: 2rem;
+  min-height: 100px; /* Evita pulos bruscos de tamanho */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilos da barra de progresso */
+.progress-container {
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-gold-dim),
+    var(--color-accent-gold)
+  );
+  transition: width 0.4s ease-in-out;
+}

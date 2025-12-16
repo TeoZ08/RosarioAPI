@@ -1,101 +1,60 @@
+/* Mantenha a estrutura, mude apenas as cores */
+
 .rosary-visualizer {
-  width: 100%;
-  overflow: hidden;
-  padding: 20px 0;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
-  position: relative;
+  /* ... (mantenha width, overflow, etc) ... */
+  padding: 30px 0;
+  /* Fundo mais transparente e escuro */
+  background: rgba(10, 25, 47, 0.5);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Efeito de fade nas bordas para indicar continuidade */
+/* Fades laterais para combinar com o novo fundo */
 .rosary-visualizer::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 50px;
-  background: linear-gradient(to right, transparent, #242424);
-  pointer-events: none;
+  /* ... */
+  background: linear-gradient(to right, transparent, var(--color-bg-main));
 }
 .rosary-visualizer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 50px;
-  background: linear-gradient(to left, transparent, #242424);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.beads-track {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  padding: 0 50%; /* Centraliza o item inicial */
-  width: max-content;
+  /* ... */
+  background: linear-gradient(to left, transparent, var(--color-bg-main));
 }
 
 .bead {
-  border-radius: 50%;
-  background-color: #444;
-  border: 2px solid #666;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  flex-shrink: 0;
-  position: relative;
+  /* Use a variável de cor para contas inativas */
+  background-color: var(--color-rosary-bead);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  /* ... restante das propriedades ... */
 }
 
-/* Tipos de Contas */
-.bead-small {
-  width: 20px;
-  height: 20px;
-}
-
+/* Contas Grandes (Douradas) */
 .bead-large {
-  width: 30px;
-  height: 30px;
-  background-color: #ffd700; /* Dourado */
-  border-color: #b8860b;
+  background-color: var(--color-accent-gold);
+  border-color: var(--color-accent-gold-dim);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
+/* Mistérios (Destaque Rosa/Roxo para contrastar com Azul/Dourado) */
 .bead-mystery {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px; /* Quadrado arredondado para diferenciar */
-  background-color: #ff69b4;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: #c71585; /* Um rosa/roxo profundo */
+  border-color: #ff69b4;
 }
 
+/* Cruz (Branca/Prata) */
 .bead-cross {
-  width: 25px;
-  height: 35px;
-  border-radius: 4px;
-  background-color: #fff;
+  background-color: #e6f1ff;
+  border-color: #fff;
 }
 
-/* Estados */
+/* Estado Ativo - Brilho Dourado */
 .bead.active {
-  transform: scale(1.5);
-  box-shadow: 0 0 15px currentColor;
-  border-color: white;
-  z-index: 10;
+  transform: scale(1.6);
+  box-shadow: 0 0 20px var(--color-accent-gold);
+  border-color: var(--color-accent-gold);
 }
 
+/* Estado Passado - Rastro Azul Claro */
 .bead.past {
-  opacity: 0.5;
-  background-color: #646cff; /* Rastro azul */
-}
-
-.bead-number {
-  font-size: 10px;
-  color: #000;
-  font-weight: bold;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  opacity: 0.7;
+  background-color: #357abd; /* Um azul médio */
+  border-color: #4a90e2;
 }

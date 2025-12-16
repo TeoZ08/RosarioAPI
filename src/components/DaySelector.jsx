@@ -1,37 +1,45 @@
 import React from "react";
-
-const daysOfWeek = [
-  "Domingo",
-  "Segunda",
-  "Terça",
-  "Quarta",
-  "Quinta",
-  "Sexta",
-  "Sábado",
-];
+import "./DaySelector.css";
 
 function DaySelector({ onSelectDay, todayMystery }) {
-  // Pega o dia da semana atual (0 = Domingo, 1 = Segunda...)
-  const currentDayIndex = new Date().getDay();
+  const days = [
+    "Domingo",
+    "Segunda",
+    "Terça",
+    "Quarta",
+    "Quinta",
+    "Sexta",
+    "Sábado",
+  ];
+
+  // Pega o nome do dia de hoje em português
+  const todayName = days[new Date().getDay()];
 
   return (
-    <div className="selector-container">
-      <h2>Escolha o dia para rezar</h2>
-      <p className="subtitle">
-        Mistério de Hoje: <strong>{todayMystery}</strong>
-      </p>
+    <div className="day-selector-container">
+      {/* Adicionei um título principal para dar cara de site */}
+      <h1 className="main-title">Santo Rosário</h1>
+      <p className="subtitle">Selecione o dia para iniciar sua oração.</p>
 
-      <div className="cards-grid">
-        {daysOfWeek.map((day, index) => (
-          <button
-            key={day}
-            className={`day-card ${index === currentDayIndex ? "today" : ""}`}
-            onClick={() => onSelectDay(day)}
-          >
-            {day}
-            {index === currentDayIndex && <span className="badge">Hoje</span>}
-          </button>
-        ))}
+      <div className="days-grid">
+        {days.map((day) => {
+          const isToday = day === todayName;
+          return (
+            <button
+              key={day}
+              onClick={() => onSelectDay(day)}
+              className={`day-button ${isToday ? "today" : ""}`}
+            >
+              {isToday && <span className="today-label">Hoje</span>}
+              <span className="day-name">{day}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="today-info">
+        <p>Mistérios de hoje ({todayName}):</p>
+        <p className="highlight">{todayMystery || "Carregando..."}</p>
       </div>
     </div>
   );
