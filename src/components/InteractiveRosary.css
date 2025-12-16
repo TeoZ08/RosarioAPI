@@ -1,0 +1,101 @@
+.rosary-visualizer {
+  width: 100%;
+  overflow: hidden;
+  padding: 20px 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  position: relative;
+}
+
+/* Efeito de fade nas bordas para indicar continuidade */
+.rosary-visualizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50px;
+  background: linear-gradient(to right, transparent, #242424);
+  pointer-events: none;
+}
+.rosary-visualizer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  background: linear-gradient(to left, transparent, #242424);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.beads-track {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 50%; /* Centraliza o item inicial */
+  width: max-content;
+}
+
+.bead {
+  border-radius: 50%;
+  background-color: #444;
+  border: 2px solid #666;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Tipos de Contas */
+.bead-small {
+  width: 20px;
+  height: 20px;
+}
+
+.bead-large {
+  width: 30px;
+  height: 30px;
+  background-color: #ffd700; /* Dourado */
+  border-color: #b8860b;
+}
+
+.bead-mystery {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px; /* Quadrado arredondado para diferenciar */
+  background-color: #ff69b4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bead-cross {
+  width: 25px;
+  height: 35px;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+/* Estados */
+.bead.active {
+  transform: scale(1.5);
+  box-shadow: 0 0 15px currentColor;
+  border-color: white;
+  z-index: 10;
+}
+
+.bead.past {
+  opacity: 0.5;
+  background-color: #646cff; /* Rastro azul */
+}
+
+.bead-number {
+  font-size: 10px;
+  color: #000;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

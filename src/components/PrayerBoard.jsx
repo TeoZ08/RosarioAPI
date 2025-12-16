@@ -1,83 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import InteractiveRosary from "./InteractiveRosary";
 import Controls from "./Controls";
-
-// --- Lógica para Gerar o Terço Completo ---
-const generateRosarySequence = () => {
-  let sequence = [];
-  let id = 0;
-
-  // 1. Início
-  sequence.push({ id: id++, name: "Sinal da Cruz", type: "inicio" });
-  sequence.push({ id: id++, name: "Oferecimento", type: "inicio" });
-  sequence.push({ id: id++, name: "Creio", type: "inicio" });
-  sequence.push({ id: id++, name: "Pai Nosso", type: "pai-nosso" });
-  sequence.push({ id: id++, name: "Ave Maria (Fé)", type: "ave-maria" });
-  sequence.push({ id: id++, name: "Ave Maria (Esperança)", type: "ave-maria" });
-  sequence.push({ id: id++, name: "Ave Maria (Caridade)", type: "ave-maria" });
-  sequence.push({ id: id++, name: "Glória", type: "gloria" });
-
-  // 2. Os 5 Mistérios
-  for (let i = 1; i <= 5; i++) {
-    sequence.push({ id: id++, name: `${i}º Mistério`, type: "misterio" });
-    sequence.push({ id: id++, name: "Pai Nosso", type: "pai-nosso" });
-
-    // 10 Ave Marias
-    for (let j = 1; j <= 10; j++) {
-      sequence.push({
-        id: id++,
-        name: `Ave Maria (${j}/10)`,
-        type: "ave-maria",
-      });
-    }
-
-    sequence.push({ id: id++, name: "Glória", type: "gloria" });
-    sequence.push({ id: id++, name: "Ó meu Jesus", type: "oracao" });
-  }
-
-  // 3. Finalização
-  sequence.push({ id: id++, name: "Salve Rainha", type: "final" });
-
-  return sequence;
-};
-
-// Gera a sequência uma vez (fora do componente para não recriar a cada render)
-const FULL_SEQUENCE = generateRosarySequence();
+import { generateRosarySequence } from "../utils/rosaryEngine"; // Importe a engine criada
 
 function PrayerBoard({ day, mysteryData, onBack }) {
   const [step, setStep] = useState(0);
+  const [showText, setShowText] = useState(false); // Toggle para ver a oração
 
-  // Funções de Navegação
+  // Gera a sequência MEMORIZADA (useMemo) baseada nos mistérios recebidos
+  const fullSequence = useMemo(() => {
+    // Tenta pegar os mistérios da prop mysteryData, senão usa um array vazio
+    // Se a API retornar uma estrutura diferente, ajuste aqui.
+    // Supondo mysteryData = ["Anunciação", "Visitação"...] ou mysteryData.mysteries
+    const mysteriesList = mysteryData?.mysteries || [];
+    return generateRosarySequence(mysteriesList);
+  }, [mysteryData]);
+
+  const currentPrayer = fullSequence[step];
+
+  // Navegação
   const nextStep = () => {
-    if (step < FULL_SEQUENCE.length - 1) {
-      setStep(step + 1);
-      // Scroll suave para o topo se estiver em mobile
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    if (step < fullSequence.length - 1) {
+      setStep((prev) => prev + 1);
     }
   };
 
   const prevStep = () => {
-    if (step > 0) setStep(step - 1);
+    if (step > 0) setStep((prev) => prev - 1);
   };
 
-  // Atalho de Teclado (Setas)
+  // Teclado
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "ArrowRight" || e.key === " ") nextStep(); // Seta Dir ou Espaço
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        nextStep();
+      }
       if (e.key === "ArrowLeft") prevStep();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [nextStep][prevStep]);
+  }, [step, fullSequence]); // Dependências atualizadas
 
-  const currentPrayer = FULL_SEQUENCE[step];
-
-  // Calcula o progresso em porcentagem para uma barra de progresso (opcional)
-  const progress = ((step + 1) / FULL_SEQUENCE.length) * 100;
+  // Cálculo de progresso
+  const progress = ((step + 1) / fullSequence.length) * 100;
 
   return (
     <div className="prayer-board">
-      {/* Cabeçalho */}
       <div className="header-board">
         <button onClick={onBack} className="btn-back">
           ← Voltar
@@ -85,50 +54,39 @@ function PrayerBoard({ day, mysteryData, onBack }) {
         <div className="header-info">
           <h3>{day}</h3>
           <span className="mystery-tag">
-            {mysteryData?.mystery || "Mistério do Dia"}
+            {mysteryData?.mystery || "Mistérios do Dia"}
           </span>
         </div>
       </div>
 
-      {/* Área Visual (Terço) */}
-      <div className="visual-area">
-        <InteractiveRosary
-          currentStep={step}
-          totalSteps={FULL_SEQUENCE.length}
-          prayerType={currentPrayer.type}
-        />
-      </div>
+      {/* VISUALIZAÇÃO NOVA */}
+      <InteractiveRosary currentStep={step} sequence={fullSequence} />
 
-      {/* Texto da Oração */}
-      <div className="prayer-text">
-        <span className="step-count">
-          Passo {step + 1} de {FULL_SEQUENCE.length}
+      {/* CONTEÚDO DA ORAÇÃO */}
+      <div className="prayer-card">
+        <span className="step-counter">
+          Passo {step + 1} de {fullSequence.length}
         </span>
-        <h2>{currentPrayer.name}</h2>
-        {/* Aqui você pode adicionar um if/else para mostrar o texto completo da oração se quiser */}
+
+        <h2 className="prayer-title">{currentPrayer.label}</h2>
+
+        <div className={`prayer-content ${showText ? "expanded" : ""}`}>
+          <p>{currentPrayer.text}</p>
+        </div>
+
+        <button
+          className="btn-toggle-text"
+          onClick={() => setShowText(!showText)}
+        >
+          {showText ? "Ocultar Oração" : "Mostrar Oração Completa"}
+        </button>
       </div>
 
-      {/* Barra de Progresso Simples */}
-      <div
-        style={{
-          width: "100%",
-          height: "4px",
-          background: "#333",
-          marginTop: "10px",
-          borderRadius: "2px",
-        }}
-      >
-        <div
-          style={{
-            width: `${progress}%`,
-            height: "100%",
-            background: "#646cff",
-            transition: "width 0.3s",
-          }}
-        ></div>
+      {/* BARRA DE PROGRESSO */}
+      <div className="progress-container">
+        <div className="progress-bar" style={{ width: `${progress}%` }} />
       </div>
 
-      {/* Controles */}
       <Controls onNext={nextStep} onPrev={prevStep} />
     </div>
   );
