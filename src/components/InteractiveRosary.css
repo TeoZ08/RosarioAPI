@@ -1,22 +1,40 @@
 .rosary-visualizer-container {
   position: relative;
-  width: 100%;
-  padding: 40px 0;
-  margin: 1rem 0;
-  /* Efeito de profundidade */
-  background: rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 60px 0;
+  /* Fundo sutil apenas na faixa */
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.2),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15%,
+    black 85%,
+    transparent
+  );
 }
 
 .rosary-track {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding: 20px 0;
-  /* Esconde a barra de rolagem */
+  padding: 40px 0;
   scrollbar-width: none;
-  -ms-overflow-style: none;
 }
 .rosary-track::-webkit-scrollbar {
   display: none;
@@ -25,57 +43,57 @@
 .beads-wrapper {
   display: flex;
   align-items: center;
-  padding: 0 50vw; /* Garante que o primeiro e último item possam ser centralizados */
-  gap: 25px; /* Espaço mais elegante entre as contas */
-}
-
-/* Base da Conta */
-.bead {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #475569, #1e293b);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  flex-shrink: 0;
+  padding: 0 50vw;
+  gap: 40px;
   position: relative;
-  opacity: 0.4;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Conta Ativa - O destaque */
-.bead.active {
-  transform: scale(2.2);
-  opacity: 1;
-  background: radial-gradient(
-    circle at 30% 30%,
-    var(--color-gold-glow),
-    var(--color-gold-metallic)
+/* Fio Dourado */
+.beads-wrapper::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #8a7018 20%,
+    #d4af37 50%,
+    #8a7018 80%,
+    transparent
   );
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-  border-color: #fff;
-  z-index: 10;
+  z-index: 0;
+  opacity: 0.5;
 }
 
-/* Contas Passadas */
-.bead.past {
-  background: #334155;
-  opacity: 0.8;
+/* Base da Conta - Estilo Pérola/Pedra */
+.bead {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #94a3b8, #475569);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
 }
 
-/* Tipos Especiais */
 .bead-large {
-  width: 28px;
-  height: 28px;
-  background: radial-gradient(circle at 30% 30%, #e2e8f0, #94a3b8);
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle at 35% 35%, #e2e8f0, #64748b);
 }
 
 .bead-mystery {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  transform: rotate(45deg); /* Losango */
-  background: linear-gradient(135deg, #1e3a8a, #0f172a);
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  transform: rotate(45deg);
+  background: #0f172a;
   border: 1px solid var(--color-gold-metallic);
   display: flex;
   align-items: center;
@@ -83,31 +101,89 @@
 }
 .bead-mystery .bead-icon {
   transform: rotate(-45deg);
+  font-size: 0.7rem;
   color: var(--color-gold-metallic);
-  font-family: var(--font-display);
-  font-weight: bold;
 }
 
+/* Cruz Geométrica Limpa */
 .bead-cross {
-  width: 24px;
-  height: 36px;
-  border-radius: 4px;
-  background: #e2e8f0;
+  width: 18px;
+  height: 30px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, #cbd5e1, #64748b);
+  /* Desenha a forma da cruz com clip-path */
+  clip-path: polygon(
+    25% 0%,
+    75% 0%,
+    75% 20%,
+    100% 20%,
+    100% 45%,
+    75% 45%,
+    75% 100%,
+    25% 100%,
+    25% 45%,
+    0% 45%,
+    0% 20%,
+    25% 20%
+  );
+  transform: none !important;
+  box-shadow: none; /* Shadow não funciona bem com clip-path, removemos */
+  filter: drop-shadow(
+    2px 4px 6px rgba(0, 0, 0, 0.5)
+  ); /* Usamos filter para sombra na cruz */
 }
 
-/* Luz de foco central */
-.focus-light {
+/* --- ESTADOS --- */
+
+.bead.past {
+  opacity: 0.3;
+  filter: grayscale(1);
+  transform: scale(0.9);
+}
+
+/* ATIVO: O Halo Santo */
+.bead.active {
+  transform: scale(1.6);
+  z-index: 10;
+  background: radial-gradient(circle at 30% 30%, #fff, #fbbf24);
+  border-color: #fff;
+  /* Removemos a luz amarela difusa e trocamos por algo nítido */
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.8); /* Borda escura para contraste */
+}
+
+/* A Auréola (Anel giratório) */
+.bead.active::after {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
-  background: radial-gradient(
-    circle,
-    rgba(212, 175, 55, 0.15) 0%,
-    transparent 70%
-  );
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border: 1px dashed var(--color-gold-metallic);
+  border-radius: 50%;
+  animation: halo-spin 10s linear infinite;
   pointer-events: none;
-  z-index: 0;
+  opacity: 0.6;
+}
+
+/* Segundo anel sutil */
+.bead.active::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+@keyframes halo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

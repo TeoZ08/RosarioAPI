@@ -1,48 +1,70 @@
-/* src/App.css */
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap");
 
 :root {
-  /* Paleta "Sanctum" */
-  --color-bg-deep: #050a14;
-  --color-bg-card: rgba(20, 30, 50, 0.65);
+  --color-bg-deep: #0f172a;
+  --color-bg-card: rgba(15, 23, 42, 0.7); /* Levemente mais opaco */
   --color-gold-metallic: #d4af37;
-  --color-gold-glow: #f9e29c;
-  --color-text-primary: #f0f4f8;
-  --color-text-muted: #94a3b8;
-  --color-accent-blue: #1e3a8a;
+  --color-gold-dim: #8a7018;
+  --color-gold-glow: #ffeebb;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
 
-  /* Efeitos */
-  --glass-border: 1px solid rgba(212, 175, 55, 0.15);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --backdrop-blur: blur(12px);
-  --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Tipografia */
-  --font-display: "Cinzel", serif;
-  --font-body: "Lora", serif;
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  --backdrop-blur: blur(20px);
 }
 
 body {
   background-color: var(--color-bg-deep);
-  background-image: radial-gradient(
-      circle at 50% 0%,
-      #1a2c4e 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 85% 90%,
-      rgba(212, 175, 55, 0.05) 0%,
-      transparent 40%
-    );
   color: var(--color-text-primary);
   font-family: var(--font-body);
   margin: 0;
   min-height: 100vh;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Camada 1: O Gradiente de Luz (Atmosfera)
+*/
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 0%, #1e293b 0%, transparent 80%),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(212, 175, 55, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(30, 58, 138, 0.1) 0%,
+      transparent 50%
+    );
+  z-index: -2;
+}
+
+/* Camada 2: Textura de Ruído (Noise)
+  Dá a sensação de "completo" e materialidade
+*/
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03; /* Muito sutil */
+  pointer-events: none;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
 .app-container {
-  max-width: 1000px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
   display: flex;
@@ -51,48 +73,24 @@ body {
   min-height: 100vh;
 }
 
-/* Botões Premium */
-button {
-  font-family: var(--font-display);
-  letter-spacing: 0.05em;
-  transition: var(--transition-smooth);
-}
-
+/* Botões */
 .btn-primary {
-  background: linear-gradient(135deg, var(--color-gold-metallic), #b08d28);
-  color: #000;
-  font-weight: 800;
+  background: linear-gradient(135deg, #cfb53b 0%, #a18318 100%);
+  color: #0f172a;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  padding: 0.8rem 2rem;
-  border-radius: 50px;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
-}
-
-.loading {
-  font-family: var(--font-display);
-  color: var(--color-gold-metallic);
-  font-size: 1.5rem;
-  animation: pulse 2s infinite;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.5;
-  }
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, #ecd45e 0%, #b8961c 100%);
 }

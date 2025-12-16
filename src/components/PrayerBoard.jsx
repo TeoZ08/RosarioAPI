@@ -1,20 +1,16 @@
-/* src/components/PrayerBoard.jsx */
 import React, { useState, useEffect, useMemo } from "react";
 import InteractiveRosary from "./InteractiveRosary";
 import Controls from "./Controls";
 import { generateRosarySequence } from "../utils/rosaryEngine";
+import { motion, AnimatePresence } from "framer-motion";
 import "./PrayerBoard.css";
 
 function PrayerBoard({ day, mysteryData, onBack }) {
-  // Inicializa estado ou recupera
   const [step, setStep] = useState(() => {
     const saved = localStorage.getItem("rosaryStep");
     const savedDay = localStorage.getItem("rosaryDay");
-    // Só recupera se for o mesmo dia, senão reinicia
     return saved && savedDay === day ? Number(saved) : 0;
   });
-
-  const [isExpanded, setIsExpanded] = useState(true);
 
   const fullSequence = useMemo(() => {
     return generateRosarySequence(mysteryData?.mysteries || []);
@@ -22,7 +18,6 @@ function PrayerBoard({ day, mysteryData, onBack }) {
 
   const currentPrayer = fullSequence[step] || fullSequence[0];
 
-  // Persistência
   useEffect(() => {
     localStorage.setItem("rosaryStep", step);
     localStorage.setItem("rosaryDay", day);
@@ -36,7 +31,6 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     if (step > 0) setStep((s) => s - 1);
   };
 
-  // Teclado
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowRight" || e.key === " ") handleNext();
@@ -48,51 +42,145 @@ function PrayerBoard({ day, mysteryData, onBack }) {
 
   const progress = ((step + 1) / fullSequence.length) * 100;
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 15, scale: 0.98 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+    exit: {
+      opacity: 0,
+      y: -10,
+      scale: 0.98,
+      transition: { duration: 0.3, ease: "easeIn" },
+    },
+  };
+
+  // --- MAPA DE NOMES LITÚRGICOS ---
+  // Traduz os ids técnicos para nomes bonitos na interface
+  const getLiturgicalName = (type) => {
+    const map = {
+      inicio: "Introdução",
+      "conta-grande": "Pai Nosso",
+      "conta-pequena": "Ave Maria",
+      gloria: "Glória ao Pai",
+      jaculatoria: "Jaculatória",
+      misterio: "Contemplação",
+      final: "Encerramento",
+      cruz: "Sinal da Cruz",
+    };
+    return map[type] || type;
+  };
+
+  const formatFullTitle = () => {
+    const dayMap = {
+      Domingo: "Domingo",
+      Segunda: "Segunda-Feira",
+      Terça: "Terça-Feira",
+      Quarta: "Quarta-Feira",
+      Quinta: "Quinta-Feira",
+      Sexta: "Sexta-Feira",
+      Sábado: "Sábado",
+    };
+    const fullDay = dayMap[day] || day;
+    const mysteryName = mysteryData?.mystery || "Mistério";
+
+    return {
+      title: `Mistérios ${mysteryName}`,
+      subtitle: `(${fullDay})`,
+    };
+  };
+
+  const headerInfo = formatFullTitle();
+
   return (
-    <div className="prayer-board fade-in">
+    <motion.div
+      className="prayer-board"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+    >
       <header className="board-header">
         <button onClick={onBack} className="btn-back">
-          <span className="icon">‹</span> Voltar
+          <span className="icon">✕</span> Encerrar
         </button>
+
         <div className="header-titles">
-          <span className="mystery-label">Mistérios {day}</span>
-          <h2 className="mystery-title">{mysteryData?.mystery}</h2>
+          <h2 className="mystery-title">{headerInfo.title}</h2>
+          <span className="mystery-subtitle">{headerInfo.subtitle}</span>
         </div>
-        <div style={{ width: 80 }}></div>{" "}
-        {/* Espaçador para balancear header */}
+
+        <div style={{ width: 80 }}></div>
       </header>
 
-      <InteractiveRosary currentStep={step} sequence={fullSequence} />
+      <div className="rosary-wrapper">
+        <InteractiveRosary currentStep={step} sequence={fullSequence} />
+      </div>
 
-      <main className="prayer-card glass-panel">
-        <div className="card-header">
-          <span className="step-indicator">
-            {step + 1} / {fullSequence.length}
-          </span>
-        </div>
+      <div
+        className="card-container"
+        style={{
+          position: "relative",
+          minHeight: "380px",
+          width: "100%",
+          maxWidth: "700px",
+        }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.main
+            key={step}
+            className="prayer-card glass-panel"
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className="card-header">
+              <span className="step-indicator">
+                Passo {step + 1} de {fullSequence.length}
+              </span>
+              {/* Usa a função de tradução aqui */}
+              <span className="prayer-type-tag">
+                {getLiturgicalName(currentPrayer?.type)}
+              </span>
+            </div>
 
-        <h1 className="prayer-title">{currentPrayer?.label}</h1>
+            <motion.h1
+              className="prayer-title"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
+            >
+              {currentPrayer?.label}
+            </motion.h1>
 
-        <div
-          className={`prayer-text-container ${
-            isExpanded ? "expanded" : "collapsed"
-          }`}
-        >
-          <p className="prayer-text">{currentPrayer?.text}</p>
-        </div>
-      </main>
+            <div className="prayer-text-container">
+              <p className="prayer-text">{currentPrayer?.text}</p>
+            </div>
+          </motion.main>
+        </AnimatePresence>
+      </div>
 
-      {/* Controles fixos na parte inferior para mobile */}
       <footer className="board-footer">
         <div className="progress-track">
-          <div
+          <motion.div
             className="progress-fill"
-            style={{ width: `${progress}%` }}
-          ></div>
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5 }}
+          ></motion.div>
         </div>
-        <Controls onNext={handleNext} onPrev={handlePrev} />
+
+        <Controls
+          onNext={handleNext}
+          onPrev={handlePrev}
+          isFirstStep={step === 0}
+          isLastStep={step === fullSequence.length - 1}
+        />
       </footer>
-    </div>
+    </motion.div>
   );
 }
 

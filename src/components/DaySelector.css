@@ -5,78 +5,210 @@
   flex-direction: column;
   gap: 2rem;
   text-align: center;
+  margin-top: 1rem;
+}
+
+/* --- HEADER --- */
+.hero-section {
+  margin-bottom: 1rem;
+}
+
+.cross-icon {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--color-gold-dim);
+  margin-bottom: 0.5rem;
 }
 
 .app-title {
   font-family: var(--font-display);
-  font-size: 3.5rem;
+  font-size: 3rem;
   color: var(--color-gold-metallic);
-  margin-bottom: 0;
+  margin: 0;
+  line-height: 1;
   background: linear-gradient(to bottom, #f9e29c, #d4af37);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .app-subtitle {
-  color: var(--color-text-muted);
-  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
   font-style: italic;
   margin-top: 0.5rem;
+  letter-spacing: 1px;
 }
 
+/* --- DESTAQUE DE HOJE (CARD PRINCIPAL) --- */
 .today-highlight {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  border: 1px solid var(--color-gold-metallic);
+  justify-content: center;
+  position: relative; /* Essencial para os ornamentos absolutos */
+  overflow: hidden; /* Corta o que passar do card */
+  min-height: 280px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
   background: linear-gradient(
     180deg,
-    rgba(20, 30, 50, 0.8),
-    rgba(5, 10, 20, 0.9)
+    rgba(20, 30, 50, 0.9),
+    rgba(5, 10, 20, 0.95)
   );
 }
 
-.label {
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+/* Ornamentos de Fundo */
+.ornament-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  opacity: 0.1;
+  color: var(--color-gold-metallic);
+  z-index: 0;
+  pointer-events: none;
 }
 
-.mystery-today {
+.texture-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.rotating-rosette {
+  animation: slow-spin 60s linear infinite;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes slow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Conteúdo (frente dos ornamentos) */
+.content-relative {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.label-day {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.7rem;
+  color: var(--color-gold-glow);
+  margin-bottom: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mystery-today-title {
+  font-family: var(--font-body);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  margin: 0.5rem 0 2rem 0;
+  line-height: 1.3;
+}
+
+.highlight-text {
   font-family: var(--font-display);
-  font-size: 2rem;
-  margin: 0.5rem 0 1.5rem 0;
+  font-size: 2.2rem;
+  color: var(--color-gold-metallic);
+  font-weight: 600;
+  display: block;
+  margin-top: 0.2rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn-large {
+  font-size: 1.1rem;
+  padding: 1rem 3rem;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+}
+
+/* --- GRID DE DIAS --- */
+.other-days-section {
+  width: 100%;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+.other-days-section:hover {
+  opacity: 1;
 }
 
 .grid-label {
   text-transform: uppercase;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.3);
-  margin-top: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+  opacity: 0.6;
 }
 
 .days-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 0.8rem;
 }
 
 .day-card {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--color-text-muted);
-  padding: 1rem;
-  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--color-text-secondary);
+  padding: 0.8rem 0.5rem;
+  border-radius: 8px;
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .day-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: var(--color-gold-metallic);
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--color-gold-dim);
   color: var(--color-text-primary);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+}
+
+.day-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.day-mystery {
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 500px) {
+  .app-title {
+    font-size: 2.5rem;
+  }
+  .highlight-text {
+    font-size: 1.8rem;
+  }
+  .days-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
