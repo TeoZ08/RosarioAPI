@@ -1,68 +1,98 @@
+/* src/App.css */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap");
+
 :root {
-  /* --- PALETA DE CORES "NOITE SAGRADA" --- */
-  --color-bg-main: #0a192f; /* Azul marinho muito profundo */
-  --color-bg-secondary: #112240; /* Azul um pouco mais claro para cartões */
-  --color-accent-gold: #ffd700; /* Dourado vibrante */
-  --color-accent-gold-dim: #b89b00; /* Dourado mais apagado para bordas */
-  --color-text-primary: #e6f1ff; /* Branco azulado para texto principal */
-  --color-text-secondary: #a8b2d1; /* Cinza azulado para textos de apoio */
-  --color-rosary-bead: #233554; /* Cor das contas inativas */
+  /* Paleta "Sanctum" */
+  --color-bg-deep: #050a14;
+  --color-bg-card: rgba(20, 30, 50, 0.65);
+  --color-gold-metallic: #d4af37;
+  --color-gold-glow: #f9e29c;
+  --color-text-primary: #f0f4f8;
+  --color-text-muted: #94a3b8;
+  --color-accent-blue: #1e3a8a;
 
-  /* --- TIPOGRAFIA --- */
-  --font-title: "Cinzel Decorative", cursive, serif;
-  --font-body: "Lato", sans-serif;
+  /* Efeitos */
+  --glass-border: 1px solid rgba(212, 175, 55, 0.15);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --backdrop-blur: blur(12px);
+  --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* --- SOMBRAS E BORDAS --- */
-  --shadow-subtle: 0 10px 30px -10px rgba(2, 12, 27, 0.7);
-  --border-radius-lg: 16px;
-  --border-radius-sm: 8px;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  /* Tipografia */
+  --font-display: "Cinzel", serif;
+  --font-body: "Lora", serif;
 }
 
 body {
-  font-family: var(--font-body);
-  background-color: var(--color-bg-main);
-  color: var(--color-text-primary);
-  /* Um fundo sutil radial para dar profundidade, como uma luz central */
+  background-color: var(--color-bg-deep);
   background-image: radial-gradient(
-    circle at 50% 30%,
-    #1b2a4e 0%,
-    var(--color-bg-main) 70%
-  );
+      circle at 50% 0%,
+      #1a2c4e 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 85% 90%,
+      rgba(212, 175, 55, 0.05) 0%,
+      transparent 40%
+    );
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  margin: 0;
   min-height: 100vh;
-  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* Estrutura Principal do Site */
 .app-container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
 }
 
-/* Títulos Padrão */
-h1,
-h2,
-h3 {
-  font-family: var(--font-title);
-  color: var(--color-accent-gold);
-  font-weight: 400; /* Cinzel Decorative já é marcante, não precisa de bold */
+/* Botões Premium */
+button {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+  transition: var(--transition-smooth);
 }
 
-/* Botões Padrão */
-button {
-  cursor: pointer;
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-gold-metallic), #b08d28);
+  color: #000;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
   border: none;
-  outline: none;
-  font-family: var(--font-body);
-  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
+}
+
+.loading {
+  font-family: var(--font-display);
+  color: var(--color-gold-metallic);
+  font-size: 1.5rem;
+  animation: pulse 2s infinite;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }

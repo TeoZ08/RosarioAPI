@@ -1,109 +1,113 @@
-.rosary-visualizer {
-  width: 100%;
-  overflow: hidden;
-  padding: 30px 0;
-  /* Fundo mais transparente e escuro */
-  background: rgba(10, 25, 47, 0.5);
-  border-radius: var(--border-radius-lg);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.rosary-visualizer-container {
   position: relative;
+  width: 100%;
+  padding: 40px 0;
+  margin: 1rem 0;
+  /* Efeito de profundidade */
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Fades laterais */
-.rosary-visualizer::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 50px;
-  background: linear-gradient(to right, transparent, var(--color-bg-main));
-  pointer-events: none;
+.rosary-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 20px 0;
+  /* Esconde a barra de rolagem */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.rosary-visualizer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 50px;
-  background: linear-gradient(to left, transparent, var(--color-bg-main));
-  pointer-events: none;
-  z-index: 2;
+.rosary-track::-webkit-scrollbar {
+  display: none;
 }
 
-.beads-track {
+.beads-wrapper {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 0 50%; /* Centraliza o item inicial */
-  width: max-content;
-  scroll-behavior: smooth; /* <--- O SEGREDO DO SCROLL SUAVE */
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  padding: 0 50vw; /* Garante que o primeiro e último item possam ser centralizados */
+  gap: 25px; /* Espaço mais elegante entre as contas */
 }
 
+/* Base da Conta */
 .bead {
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background-color: var(--color-rosary-bead);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: radial-gradient(circle at 30% 30%, #475569, #1e293b);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
   position: relative;
+  opacity: 0.4;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Tipos de Contas */
-.bead-small {
-  width: 20px;
-  height: 20px;
+/* Conta Ativa - O destaque */
+.bead.active {
+  transform: scale(2.2);
+  opacity: 1;
+  background: radial-gradient(
+    circle at 30% 30%,
+    var(--color-gold-glow),
+    var(--color-gold-metallic)
+  );
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+  border-color: #fff;
+  z-index: 10;
 }
 
+/* Contas Passadas */
+.bead.past {
+  background: #334155;
+  opacity: 0.8;
+}
+
+/* Tipos Especiais */
 .bead-large {
-  width: 30px;
-  height: 30px;
-  background-color: var(--color-accent-gold);
-  border-color: var(--color-accent-gold-dim);
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  width: 28px;
+  height: 28px;
+  background: radial-gradient(circle at 30% 30%, #e2e8f0, #94a3b8);
 }
 
 .bead-mystery {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
-  background-color: #c71585;
-  border-color: #ff69b4;
+  border-radius: 12px;
+  transform: rotate(45deg); /* Losango */
+  background: linear-gradient(135deg, #1e3a8a, #0f172a);
+  border: 1px solid var(--color-gold-metallic);
   display: flex;
   align-items: center;
   justify-content: center;
 }
+.bead-mystery .bead-icon {
+  transform: rotate(-45deg);
+  color: var(--color-gold-metallic);
+  font-family: var(--font-display);
+  font-weight: bold;
+}
 
 .bead-cross {
-  width: 25px;
-  height: 35px;
+  width: 24px;
+  height: 36px;
   border-radius: 4px;
-  background-color: #e6f1ff;
-  border-color: #fff;
+  background: #e2e8f0;
 }
 
-/* Estados */
-.bead.active {
-  transform: scale(1.6);
-  box-shadow: 0 0 20px var(--color-accent-gold);
-  border-color: var(--color-accent-gold);
-  z-index: 10;
-}
-
-.bead.past {
-  opacity: 0.7;
-  background-color: #357abd;
-  border-color: #4a90e2;
-}
-
-.bead-number {
-  font-size: 10px;
-  color: #000;
-  font-weight: bold;
+/* Luz de foco central */
+.focus-light {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.15) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
 }

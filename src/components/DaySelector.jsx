@@ -1,3 +1,4 @@
+/* src/components/DaySelector.jsx */
 import React from "react";
 import "./DaySelector.css";
 
@@ -12,34 +13,38 @@ function DaySelector({ onSelectDay, todayMystery }) {
     "Sábado",
   ];
 
-  // Pega o nome do dia de hoje em português
-  const todayName = days[new Date().getDay()];
+  const todayIndex = new Date().getDay();
+  const todayName = days[todayIndex];
 
   return (
-    <div className="day-selector-container">
-      {/* Adicionei um título principal para dar cara de site */}
-      <h1 className="main-title">Santo Rosário</h1>
-      <p className="subtitle">Selecione o dia para iniciar sua oração.</p>
+    <div className="selector-wrapper fade-in">
+      <div className="hero-section">
+        <h1 className="app-title">Santo Rosário</h1>
+        <p className="app-subtitle">Contemplação e oração diária</p>
+      </div>
 
+      <div className="today-highlight glass-panel">
+        <span className="label">Liturgia de Hoje</span>
+        <h2 className="mystery-today">{todayMystery || "Mistérios..."}</h2>
+        <button className="btn-primary" onClick={() => onSelectDay(todayName)}>
+          Rezar Mistérios de Hoje
+        </button>
+      </div>
+
+      <div className="grid-label">Outros dias</div>
       <div className="days-grid">
-        {days.map((day) => {
-          const isToday = day === todayName;
+        {days.map((day, index) => {
+          if (day === todayName) return null; // Já mostrado no destaque
           return (
             <button
               key={day}
               onClick={() => onSelectDay(day)}
-              className={`day-button ${isToday ? "today" : ""}`}
+              className="day-card"
             >
-              {isToday && <span className="today-label">Hoje</span>}
-              <span className="day-name">{day}</span>
+              {day}
             </button>
           );
         })}
-      </div>
-
-      <div className="today-info">
-        <p>Mistérios de hoje ({todayName}):</p>
-        <p className="highlight">{todayMystery || "Carregando..."}</p>
       </div>
     </div>
   );
