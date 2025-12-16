@@ -16,6 +16,13 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     return generateRosarySequence(mysteryData?.mysteries || []);
   }, [mysteryData]);
 
+  // Encontra os índices onde começam os mistérios para criar os atalhos
+  const mysteryIndices = useMemo(() => {
+    return fullSequence
+      .map((item, index) => (item.type === "misterio" ? index : -1))
+      .filter((index) => index !== -1);
+  }, [fullSequence]);
+
   const currentPrayer = fullSequence[step] || fullSequence[0];
 
   useEffect(() => {
@@ -29,6 +36,17 @@ function PrayerBoard({ day, mysteryData, onBack }) {
 
   const handlePrev = () => {
     if (step > 0) setStep((s) => s - 1);
+  };
+
+  // Função para pular para qualquer conta (clique na bolinha ou atalho)
+  const handleJumpTo = (index) => {
+    setStep(index);
+  };
+
+  const handleRestart = () => {
+    if (window.confirm("Deseja reiniciar o terço do começo?")) {
+      setStep(0);
+    }
   };
 
   useEffect(() => {
@@ -58,8 +76,6 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     },
   };
 
-  // --- MAPA DE NOMES LITÚRGICOS ---
-  // Traduz os ids técnicos para nomes bonitos na interface
   const getLiturgicalName = (type) => {
     const map = {
       inicio: "Introdução",
@@ -112,74 +128,115 @@ function PrayerBoard({ day, mysteryData, onBack }) {
           <span className="mystery-subtitle">{headerInfo.subtitle}</span>
         </div>
 
-        <div style={{ width: 80 }}></div>
+        {/* Botão de Reiniciar (Lado Direito) */}
+        <button
+          onClick={handleRestart}
+          className="btn-restart"
+          title="Reiniciar Terço"
+        >
+          <span className="icon">↻</span>
+        </button>
       </header>
 
       <div className="rosary-wrapper">
-        <InteractiveRosary currentStep={step} sequence={fullSequence} />
+        <InteractiveRosary
+          currentStep={step}
+          sequence={fullSequence}
+          onBeadClick={handleJumpTo} // Passando a função de clique
+        />
       </div>
 
-      <div
-        className="card-container"
-        style={{
-          position: "relative",
-          minHeight: "380px",
-          width: "100%",
-          maxWidth: "700px",
-        }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.main
-            key={step}
-            className="prayer-card glass-panel"
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <div className="card-header">
-              <span className="step-indicator">
-                Passo {step + 1} de {fullSequence.length}
-              </span>
-              {/* Usa a função de tradução aqui */}
-              <span className="prayer-type-tag">
-                {getLiturgicalName(currentPrayer?.type)}
-              </span>
+      {/* WORKSPACE: Área que divide o Card e a Barra Lateral */}
+      <div className="prayer-workspace">
+        {/* Coluna Principal (Card) */}
+        <div className="card-column">
+          <div className="card-container">
+            <AnimatePresence mode="wait">
+              <motion.main
+                key={step}
+                className="prayer-card glass-panel"
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
+                <div className="card-header">
+                  <span className="step-indicator">
+                    Passo {step + 1} / {fullSequence.length}
+                  </span>
+                  <span className="prayer-type-tag">
+                    {getLiturgicalName(currentPrayer?.type)}
+                  </span>
+                </div>
+
+                <motion.h1
+                  className="prayer-title"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1, duration: 0.8 }}
+                >
+                  {currentPrayer?.label}
+                </motion.h1>
+
+                <div className="prayer-text-container">
+                  <p className="prayer-text">{currentPrayer?.text}</p>
+                </div>
+              </motion.main>
+            </AnimatePresence>
+          </div>
+
+          <footer className="board-footer">
+            <div className="progress-track">
+              <motion.div
+                className="progress-fill"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5 }}
+              ></motion.div>
             </div>
 
-            <motion.h1
-              className="prayer-title"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1, duration: 0.8 }}
-            >
-              {currentPrayer?.label}
-            </motion.h1>
-
-            <div className="prayer-text-container">
-              <p className="prayer-text">{currentPrayer?.text}</p>
-            </div>
-          </motion.main>
-        </AnimatePresence>
-      </div>
-
-      <footer className="board-footer">
-        <div className="progress-track">
-          <motion.div
-            className="progress-fill"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5 }}
-          ></motion.div>
+            <Controls
+              onNext={handleNext}
+              onPrev={handlePrev}
+              isFirstStep={step === 0}
+              isLastStep={step === fullSequence.length - 1}
+            />
+          </footer>
         </div>
 
-        <Controls
-          onNext={handleNext}
-          onPrev={handlePrev}
-          isFirstStep={step === 0}
-          isLastStep={step === fullSequence.length - 1}
-        />
-      </footer>
+        {/* Coluna Lateral (Atalhos) */}
+        <aside className="shortcuts-sidebar glass-panel-sm">
+          <span className="sidebar-title">Ir para Mistério</span>
+          <div className="shortcuts-grid">
+            {mysteryIndices.map((idx, i) => {
+              // Verifica se o passo atual está dentro deste mistério (para destacar o botão)
+              // O mistério atual vai do índice deste mistério até o próximo (ou fim)
+              const nextIdx = mysteryIndices[i + 1] || fullSequence.length;
+              const isActive = step >= idx && step < nextIdx;
+
+              return (
+                <button
+                  key={i}
+                  onClick={() => handleJumpTo(idx)}
+                  className={`btn-shortcut ${isActive ? "active" : ""}`}
+                >
+                  {i + 1}º
+                </button>
+              );
+            })}
+          </div>
+          <div className="shortcut-divider"></div>
+          <button onClick={() => handleJumpTo(0)} className="btn-shortcut-text">
+            Início
+          </button>
+          <button
+            onClick={() => handleJumpTo(fullSequence.length - 5)}
+            className="btn-shortcut-text"
+          >
+            Final
+          </button>
+        </aside>
+      </div>
     </motion.div>
   );
 }

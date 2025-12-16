@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./InteractiveRosary.css";
 
-function InteractiveRosary({ currentStep, sequence }) {
+function InteractiveRosary({ currentStep, sequence, onBeadClick }) { // <--- Nova prop
   const scrollRef = useRef(null);
   const beadsRef = useRef([]);
 
@@ -25,14 +25,13 @@ function InteractiveRosary({ currentStep, sequence }) {
 
   return (
     <div className="rosary-visualizer-container">
-      {/* Luz divina central removida ou sutilizada no CSS */}
       <div className="focus-guide"></div>
 
       <div className="rosary-track" ref={scrollRef}>
         <div className="beads-wrapper">
           {sequence.map((item, index) => {
             const isActive = index === currentStep;
-            const isPast = index < currentStep; // <--- CORRIGIDO AQUI (Adicionei o espaço)
+            const isPast = index < currentStep;
 
             let beadClass = "bead";
             if (item.type === "conta-grande" || item.type === "pai-nosso")
@@ -48,10 +47,9 @@ function InteractiveRosary({ currentStep, sequence }) {
                 key={item.id}
                 ref={(el) => (beadsRef.current[index] = el)}
                 className={beadClass}
+                onClick={() => onBeadClick && onBeadClick(index)} // <--- Clique aqui
+                title={item.label} // Dica ao passar o mouse
               >
-                {/* REMOVIDO: O ícone de texto da cruz (†) para evitar duplicação */}
-
-                {/* Se for mistério, mantemos o número romano ou M */}
                 {item.type === "misterio" && (
                   <span className="bead-icon">M</span>
                 )}
