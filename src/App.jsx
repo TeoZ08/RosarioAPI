@@ -3,7 +3,7 @@ import axios from "axios";
 import "./App.css";
 import DaySelector from "./components/DaySelector";
 import PrayerBoard from "./components/PrayerBoard";
-import { MYSTERIES_BY_DAY } from "./data/rosaryConstants"; // Constante criada no passo 1
+import { MYSTERIES_BY_DAY, DETAILED_MYSTERIES } from "./data/rosaryConstants";
 
 function App() {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -17,7 +17,7 @@ function App() {
         const response = await axios.get(
           "https://the-rosary-api.vercel.app/v1/today"
         );
-        setApiData(response.data); // Ex: { mystery: "Dolorosos", mysteries: [...] }
+        setApiData(response.data);
       } catch (error) {
         console.error("Erro API", error);
       } finally {
@@ -35,7 +35,6 @@ function App() {
   const getMysteryDataForSelectedDay = () => {
     if (!selectedDay) return null;
 
-    // Verifica qual é o dia da semana atual (0-6)
     const days = [
       "Domingo",
       "Segunda",
@@ -47,17 +46,17 @@ function App() {
     ];
     const todayName = days[new Date().getDay()];
 
-    // Se o usuário escolheu o dia de hoje E temos dados da API, usa a API
+    // 1. Se for HOJE e tivermos dados da API, usa a API
     if (selectedDay === todayName && apiData) {
       return apiData;
     }
 
-    // Se escolheu outro dia, usamos nossa base local apenas para definir o TIPO de mistério
-    // Nota: Para ter os textos dos mistérios específicos de outros dias (ex: Batismo de Jesus na Quinta),
-    // você precisaria expandir o arquivo `rosaryConstants.js` com a lista completa de mistérios.
+    // 2. Se for outro dia (ou API falhou), usa nossa base local detalhada
+    const mysteryType = MYSTERIES_BY_DAY[selectedDay] || "Mistério do Dia";
+
     return {
-      mystery: MYSTERIES_BY_DAY[selectedDay] || "Mistério do Dia",
-      mysteries: [], // Aqui você passaria a lista hardcoded se tivesse criado no passo 1
+      mystery: mysteryType,
+      mysteries: DETAILED_MYSTERIES[mysteryType] || [],
     };
   };
 

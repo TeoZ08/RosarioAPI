@@ -1,56 +1,107 @@
-import React, { useRef, useEffect } from "react";
-import "./InteractiveRosary.css"; // Vamos criar esse CSS abaixo
+import React, { useState, useEffect, useMemo } from "react";
+import InteractiveRosary from "./InteractiveRosary";
+import Controls from "./Controls";
+import { generateRosarySequence } from "../utils/rosaryEngine";
 
-function InteractiveRosary({ currentStep, sequence }) {
-  const scrollRef = useRef(null);
+function PrayerBoard({ day, mysteryData, onBack }) {
+  // Inicializa o state lendo do localStorage, se existir
+  const [step, setStep] = useState(() => {
+    const saved = localStorage.getItem("rosaryStep");
+    return saved ? Number(saved) : 0;
+  });
 
-  // Mantém a conta ativa sempre visível no scroll
+  const [showText, setShowText] = useState(false);
+
+  // Gera a sequência MEMORIZADA
+  const fullSequence = useMemo(() => {
+    const mysteriesList = mysteryData?.mysteries || [];
+    return generateRosarySequence(mysteriesList);
+  }, [mysteryData]);
+
+  const currentPrayer = fullSequence[step] || fullSequence[0];
+
+  // Salva no localStorage sempre que o passo mudar
   useEffect(() => {
-    if (scrollRef.current) {
-      const activeNode = scrollRef.current.children[currentStep];
-      if (activeNode) {
-        activeNode.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "center",
-        });
-      }
+    localStorage.setItem("rosaryStep", step);
+  }, [step]);
+
+  // Limpa o progresso ao voltar para o menu
+  const handleBack = () => {
+    localStorage.removeItem("rosaryStep");
+    onBack();
+  };
+
+  // Navegação
+  const nextStep = () => {
+    if (step < fullSequence.length - 1) {
+      setStep((prev) => prev + 1);
     }
-  }, [currentStep]);
+  };
+
+  const prevStep = () => {
+    if (step > 0) setStep((prev) => prev - 1);
+  };
+
+  // Teclado
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        nextStep();
+      }
+      if (e.key === "ArrowLeft") prevStep();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [step, fullSequence]);
+
+  const progress = ((step + 1) / fullSequence.length) * 100;
 
   return (
-    <div className="rosary-visualizer">
-      <div className="beads-track" ref={scrollRef}>
-        {sequence.map((step, index) => {
-          const isActive = index === currentStep;
-          const isPast = index < currentStep;
-
-          let beadClass = "bead";
-          if (step.type === "conta-grande") beadClass += " bead-large";
-          if (step.type === "conta-pequena") beadClass += " bead-small";
-          if (step.type === "misterio") beadClass += " bead-mystery";
-          if (step.type === "inicio" || step.type === "final")
-            beadClass += " bead-cross";
-
-          return (
-            <div
-              key={step.id}
-              className={`${beadClass} ${isActive ? "active" : ""} ${
-                isPast ? "past" : ""
-              }`}
-            >
-              {/* Opcional: Número dentro da conta se for Ave Maria */}
-              {step.type === "conta-pequena" && step.label.includes("/") && (
-                <span className="bead-number">
-                  {step.label.match(/\d+/)[0]}
-                </span>
-              )}
-            </div>
-          );
-        })}
+    <div className="prayer-board">
+      <div className="header-board">
+        <button onClick={handleBack} className="btn-back">
+          ← Voltar
+        </button>
+        <div className="header-info">
+          <h3>{day}</h3>
+          <span className="mystery-tag">
+            {mysteryData?.mystery || "Mistérios do Dia"}
+          </span>
+        </div>
       </div>
+
+      {/* Visualização */}
+      <InteractiveRosary currentStep={step} sequence={fullSequence} />
+
+      {/* Conteúdo da Oração */}
+      <div className="prayer-card">
+        <span className="step-counter">
+          Passo {step + 1} de {fullSequence.length}
+        </span>
+
+        <h2 className="prayer-title">{currentPrayer?.label}</h2>
+
+        <div className={`prayer-content ${showText ? "expanded" : ""}`}>
+          <p>{currentPrayer?.text}</p>
+        </div>
+
+        <button
+          className="btn-toggle-text"
+          onClick={() => setShowText(!showText)}
+        >
+          {showText ? "Ocultar Oração" : "Mostrar Oração Completa"}
+        </button>
+      </div>
+
+      {/* Barra de Progresso */}
+      <div className="progress-container">
+        <div className="progress-bar" style={{ width: `${progress}%` }} />
+      </div>
+
+      <Controls onNext={nextStep} onPrev={prevStep} />
     </div>
   );
 }
 
-export default InteractiveRosary;
+export default PrayerBoard;
