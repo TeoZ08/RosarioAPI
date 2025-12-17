@@ -44,7 +44,8 @@
   display: flex;
   align-items: center;
   padding: 0 50vw;
-  gap: 40px;
+  /* ALTERADO: Removemos o gap fixo para controlar via margem */
+  gap: 0;
   position: relative;
 }
 
@@ -72,7 +73,9 @@
 .bead {
   width: 14px;
   height: 14px;
-  border-radius: 50%; /* Garante que seja sempre redonda */
+  /* ALTERADO: Margem lateral substitui o gap (20+20 = 40px) */
+  margin: 0 20px;
+  border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #94a3b8, #475569);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -83,6 +86,18 @@
   cursor: pointer;
 }
 
+/* NOVA CLASSE: Conta Fantasma (Invisível) */
+.bead-ghost {
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* Efeito de Hover nas bolinhas */
 .bead:hover {
   transform: scale(1.4);
@@ -91,7 +106,7 @@
   z-index: 5;
 }
 
-/* Conta Grande (Pai Nosso / Mistério) - Também perfeitamente redonda */
+/* Conta Grande (Pai Nosso / Mistério) */
 .bead-large {
   width: 22px;
   height: 22px;
@@ -99,7 +114,7 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
-/* Cruz (Única exceção de formato, mantemos a geometria da cruz) */
+/* Cruz */
 .bead-cross {
   width: 18px;
   height: 30px;

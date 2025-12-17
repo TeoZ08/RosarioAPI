@@ -14,6 +14,7 @@ function InteractiveRosary({ currentStep, sequence, onBeadClick }) {
       const beadLeft = bead.offsetLeft;
       const beadWidth = bead.offsetWidth;
 
+      // Centraliza a conta (ou o ponto invisível) na tela
       const scrollPos = beadLeft - containerWidth / 2 + beadWidth / 2;
 
       container.scrollTo({
@@ -33,22 +34,33 @@ function InteractiveRosary({ currentStep, sequence, onBeadClick }) {
             const isActive = index === currentStep;
             const isPast = index < currentStep;
 
+            // Identifica orações que NÃO possuem conta física no terço
+            // O 'inicio' (Oferecimento) é feito na Cruz, então ocultamos sua "conta" própria
+            const isGhost = [
+              "gloria",
+              "jaculatoria",
+              "inicio",
+              "final",
+            ].includes(item.type);
+
             let beadClass = "bead";
 
-            // LÓGICA ATUALIZADA:
-            // O 'pai-nosso-misterio' agora é visualmente uma conta grande comum
-            if (
-              item.type === "conta-grande" ||
-              item.type === "pai-nosso" ||
-              item.type === "pai-nosso-misterio"
-            ) {
-              beadClass += " bead-large";
+            if (isGhost) {
+              beadClass += " bead-ghost";
+            } else {
+              // Lógica para contas visíveis
+              if (
+                item.type === "conta-grande" ||
+                item.type === "pai-nosso" ||
+                item.type === "pai-nosso-misterio"
+              ) {
+                beadClass += " bead-large";
+              }
+
+              if (item.type === "cruz") {
+                beadClass += " bead-cross";
+              }
             }
-
-            // Removemos o 'bead-mystery' (quadrado) pois não existe mais esse passo
-
-            if (item.type === "cruz" || item.type === "inicio")
-              beadClass += " bead-cross";
 
             if (isActive) beadClass += " active";
             if (isPast) beadClass += " past";
@@ -61,10 +73,7 @@ function InteractiveRosary({ currentStep, sequence, onBeadClick }) {
                 onClick={() => onBeadClick && onBeadClick(index)}
                 title={item.label}
               >
-                {/* Se quiser colocar um número romano dentro da conta grande do mistério, pode descomentar abaixo */}
-                {/* {item.type === "pai-nosso-misterio" && item.mysteryInfo && (
-                  <span className="bead-number">{item.mysteryInfo.number}</span>
-                )} */}
+                {/* Opcional: Conteúdo interno da conta se necessário */}
               </div>
             );
           })}

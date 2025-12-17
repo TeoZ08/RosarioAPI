@@ -46,8 +46,12 @@ function App() {
     ];
     const todayName = days[new Date().getDay()];
 
-    // 1. Se for HOJE e tivermos dados da API, usa a API
-    if (selectedDay === todayName && apiData) {
+    // 1. Se for HOJE, tivermos dados da API E eles forem válidos
+    if (
+      selectedDay === todayName &&
+      apiData &&
+      Array.isArray(apiData.mysteries)
+    ) {
       return apiData;
     }
 
