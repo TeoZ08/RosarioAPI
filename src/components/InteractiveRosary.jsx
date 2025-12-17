@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./InteractiveRosary.css";
 
-function InteractiveRosary({ currentStep, sequence, onBeadClick }) { // <--- Nova prop
+function InteractiveRosary({ currentStep, sequence, onBeadClick }) {
   const scrollRef = useRef(null);
   const beadsRef = useRef([]);
 
@@ -34,11 +34,22 @@ function InteractiveRosary({ currentStep, sequence, onBeadClick }) { // <--- Nov
             const isPast = index < currentStep;
 
             let beadClass = "bead";
-            if (item.type === "conta-grande" || item.type === "pai-nosso")
+
+            // LÓGICA ATUALIZADA:
+            // O 'pai-nosso-misterio' agora é visualmente uma conta grande comum
+            if (
+              item.type === "conta-grande" ||
+              item.type === "pai-nosso" ||
+              item.type === "pai-nosso-misterio"
+            ) {
               beadClass += " bead-large";
-            if (item.type === "misterio") beadClass += " bead-mystery";
+            }
+
+            // Removemos o 'bead-mystery' (quadrado) pois não existe mais esse passo
+
             if (item.type === "cruz" || item.type === "inicio")
               beadClass += " bead-cross";
+
             if (isActive) beadClass += " active";
             if (isPast) beadClass += " past";
 
@@ -47,12 +58,13 @@ function InteractiveRosary({ currentStep, sequence, onBeadClick }) { // <--- Nov
                 key={item.id}
                 ref={(el) => (beadsRef.current[index] = el)}
                 className={beadClass}
-                onClick={() => onBeadClick && onBeadClick(index)} // <--- Clique aqui
-                title={item.label} // Dica ao passar o mouse
+                onClick={() => onBeadClick && onBeadClick(index)}
+                title={item.label}
               >
-                {item.type === "misterio" && (
-                  <span className="bead-icon">M</span>
-                )}
+                {/* Se quiser colocar um número romano dentro da conta grande do mistério, pode descomentar abaixo */}
+                {/* {item.type === "pai-nosso-misterio" && item.mysteryInfo && (
+                  <span className="bead-number">{item.mysteryInfo.number}</span>
+                )} */}
               </div>
             );
           })}

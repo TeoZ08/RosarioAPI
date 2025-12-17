@@ -16,9 +16,10 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     return generateRosarySequence(mysteryData?.mysteries || []);
   }, [mysteryData]);
 
+  // Atualiza a busca pelos índices dos mistérios com o novo tipo
   const mysteryIndices = useMemo(() => {
     return fullSequence
-      .map((item, index) => (item.type === "misterio" ? index : -1))
+      .map((item, index) => (item.type === "pai-nosso-misterio" ? index : -1))
       .filter((index) => index !== -1);
   }, [fullSequence]);
 
@@ -29,12 +30,10 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     localStorage.setItem("rosaryDay", day);
   }, [step, day]);
 
-  // Função "memorizada" para evitar recriação desnecessária
   const handleNext = useCallback(() => {
     if (step < fullSequence.length - 1) setStep((s) => s + 1);
   }, [step, fullSequence.length]);
 
-  // Função "memorizada"
   const handlePrev = useCallback(() => {
     if (step > 0) setStep((s) => s - 1);
   }, [step]);
@@ -49,8 +48,6 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     }
   };
 
-  // CORREÇÃO DAS DEPENDÊNCIAS DO useEffect
-  // Agora dependemos apenas das funções estáveis handleNext e handlePrev
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowRight" || e.key === " ") handleNext();
@@ -82,10 +79,10 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     const map = {
       inicio: "Introdução",
       "conta-grande": "Pai Nosso",
+      "pai-nosso-misterio": "Mistério & Pai Nosso", // Nome combinado
       "conta-pequena": "Ave Maria",
       gloria: "Glória ao Pai",
       jaculatoria: "Jaculatória",
-      misterio: "Contemplação",
       final: "Encerramento",
       cruz: "Sinal da Cruz",
     };
@@ -112,10 +109,9 @@ function PrayerBoard({ day, mysteryData, onBack }) {
   };
 
   const headerInfo = formatFullTitle();
+  const isMysteryContext = currentPrayer?.type === "pai-nosso-misterio";
 
   return (
-    // CORREÇÃO DO MOTION: Trocamos <div> por <motion.div> aqui na raiz.
-    // Isso força o uso da variável 'motion' e restaura a animação de entrada da página.
     <motion.div
       className="prayer-board"
       initial={{ opacity: 0 }}
@@ -169,6 +165,21 @@ function PrayerBoard({ day, mysteryData, onBack }) {
                     {getLiturgicalName(currentPrayer?.type)}
                   </span>
                 </div>
+
+                {/* SE FOR INICIO DE MISTÉRIO: MOSTRA O TÍTULO DO MISTÉRIO EM DESTAQUE */}
+                {isMysteryContext && currentPrayer.mysteryInfo && (
+                  <div className="mystery-announcement">
+                    <motion.h3
+                      className="mystery-label-highlight"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      {currentPrayer.mysteryInfo.label}
+                    </motion.h3>
+                    <p className="instruction-text">Meditamos e Rezamos</p>
+                  </div>
+                )}
 
                 <motion.h1
                   className="prayer-title"
