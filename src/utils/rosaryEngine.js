@@ -8,63 +8,63 @@ export function generateRosarySequence(mysteriesOfToday) {
         id: crypto.randomUUID(),
         type: "inicio",
         label: "Oferecimento",
-        text: PRAYERS.oferecimento,
+        text: PRAYERS.oferecimento.text, // Adicionado .text
     });
 
     sequence.push({
         id: crypto.randomUUID(),
         type: "cruz",
         label: "Sinal da Cruz e Credo",
-        text: PRAYERS.credo,
+        // CORREÇÃO: No constants é 'creio', não 'credo', e precisa do .text
+        text: PRAYERS.creio ? PRAYERS.creio.text : "Creio em Deus Pai...",
     });
 
     sequence.push({
         id: crypto.randomUUID(),
         type: "conta-grande",
         label: "Pai Nosso",
-        text: PRAYERS.paiNosso,
+        text: PRAYERS.paiNosso.text, // Adicionado .text
     });
 
     sequence.push({
         id: crypto.randomUUID(),
         type: "conta-pequena",
         label: "Ave Maria (Fé)",
-        text: PRAYERS.aveMaria,
+        text: PRAYERS.aveMaria.text, // Adicionado .text
     });
     sequence.push({
         id: crypto.randomUUID(),
         type: "conta-pequena",
         label: "Ave Maria (Esperança)",
-        text: PRAYERS.aveMaria,
+        text: PRAYERS.aveMaria.text, // Adicionado .text
     });
     sequence.push({
         id: crypto.randomUUID(),
         type: "conta-pequena",
         label: "Ave Maria (Caridade)",
-        text: PRAYERS.aveMaria,
+        text: PRAYERS.aveMaria.text, // Adicionado .text
     });
 
     sequence.push({
         id: crypto.randomUUID(),
         type: "gloria",
         label: "Glória",
-        text: PRAYERS.gloria,
+        text: PRAYERS.gloria.text, // Adicionado .text
     });
 
     // 2. Os 5 Mistérios
     mysteriesOfToday.forEach((m, index) => {
-        // AQUI ESTÁ A MUDANÇA:
-        // Não criamos mais o { type: 'misterio' }.
-        // Criamos direto o Pai Nosso, mas com dados extras do mistério.
         sequence.push({
             id: crypto.randomUUID(),
-            type: "pai-nosso-misterio", // Novo tipo combinado
+            type: "pai-nosso-misterio",
             label: "Pai Nosso",
-            text: PRAYERS.paiNosso,
+            text: PRAYERS.paiNosso.text, // Adicionado .text
             mysteryInfo: {
                 number: index + 1,
-                label: m.label, // Ex: "1º Mistério: A Ressurreição"
-                description: m.text // Texto bíblico ou reflexão
+                // Nota: Se estiver usando dados locais (DETAILED_MYSTERIES), 'm' é uma string, não objeto.
+                // Se for da API, 'm' pode ser objeto. Vale conferir se m.label existe.
+                label: m.label || m,
+                description: m.text || ""
             }
         });
 
@@ -74,7 +74,7 @@ export function generateRosarySequence(mysteriesOfToday) {
                 id: crypto.randomUUID(),
                 type: "conta-pequena",
                 label: `${i}ª Ave Maria`,
-                text: PRAYERS.aveMaria,
+                text: PRAYERS.aveMaria.text, // Adicionado .text
             });
         }
 
@@ -83,14 +83,14 @@ export function generateRosarySequence(mysteriesOfToday) {
             id: crypto.randomUUID(),
             type: "gloria",
             label: "Glória",
-            text: PRAYERS.gloria,
+            text: PRAYERS.gloria.text, // Adicionado .text
         });
 
         sequence.push({
             id: crypto.randomUUID(),
             type: "jaculatoria",
             label: "Jaculatória",
-            text: PRAYERS.jaculatoria,
+            text: PRAYERS.jaculatoria.text, // Adicionado .text
         });
     });
 
@@ -99,7 +99,7 @@ export function generateRosarySequence(mysteriesOfToday) {
         id: crypto.randomUUID(),
         type: "final",
         label: "Salve Rainha",
-        text: PRAYERS.salveRainha,
+        text: PRAYERS.salveRainha.text, // Adicionado .text
     });
 
     return sequence;
