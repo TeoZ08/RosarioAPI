@@ -1,24 +1,30 @@
 import { PRAYERS } from "../data/rosaryConstants";
 
-export function generateRosarySequence(mysteriesOfToday) {
+// Agora aceita userIntention como argumento opcional
+export function generateRosarySequence(mysteriesOfToday, userIntention = "") {
     const sequence = [];
 
     // --- 1. INÍCIO ---
+
+    // Lógica de Texto do Oferecimento Personalizado
+    let textOferecimento = PRAYERS.oferecimento.text;
+    if (userIntention && userIntention.trim() !== "") {
+        textOferecimento = `Divino Jesus, nós Vos oferecemos este Terço que vamos rezar, meditando nos mistérios da Vossa Redenção.\n\nColocamos em Vossas mãos as nossas intenções particulares: "${userIntention}".\n\nConcedei-nos, por intercessão da Virgem Maria, Mãe de Deus e nossa Mãe, as virtudes que nos são necessárias para bem rezá-lo e a graça de ganharmos as indulgências desta santa devoção.`;
+    }
 
     // Oferecimento
     sequence.push({
         id: crypto.randomUUID(),
         type: "inicio",
         label: "Oferecimento",
-        text: PRAYERS.oferecimento.text, // ✅ Correção: Acessando .text
+        text: textOferecimento, // Usa o texto modificado
     });
 
-    // Credo (Sinal da Cruz)
+    // Credo
     sequence.push({
         id: crypto.randomUUID(),
         type: "cruz",
         label: "Sinal da Cruz e Credo",
-        // ✅ Correção: O nome correto no arquivo constants é 'creio'
         text: PRAYERS.creio ? PRAYERS.creio.text : "Creio em Deus Pai...",
     });
 
@@ -27,7 +33,7 @@ export function generateRosarySequence(mysteriesOfToday) {
         id: crypto.randomUUID(),
         type: "conta-grande",
         label: "Pai Nosso",
-        text: PRAYERS.paiNosso.text, // ✅ Correção: Acessando .text
+        text: PRAYERS.paiNosso.text,
     });
 
     // 3 Ave Marias
@@ -35,19 +41,19 @@ export function generateRosarySequence(mysteriesOfToday) {
         id: crypto.randomUUID(),
         type: "conta-pequena",
         label: "Ave Maria (Fé)",
-        text: PRAYERS.aveMaria.text, // ✅ Correção: Acessando .text
+        text: PRAYERS.aveMaria.text,
     });
     sequence.push({
         id: crypto.randomUUID(),
         type: "conta-pequena",
         label: "Ave Maria (Esperança)",
-        text: PRAYERS.aveMaria.text, // ✅ Correção: Acessando .text
+        text: PRAYERS.aveMaria.text,
     });
     sequence.push({
         id: crypto.randomUUID(),
         type: "conta-pequena",
         label: "Ave Maria (Caridade)",
-        text: PRAYERS.aveMaria.text, // ✅ Correção: Acessando .text
+        text: PRAYERS.aveMaria.text,
     });
 
     // Glória
@@ -55,30 +61,30 @@ export function generateRosarySequence(mysteriesOfToday) {
         id: crypto.randomUUID(),
         type: "gloria",
         label: "Glória",
-        text: PRAYERS.gloria.text, // ✅ Correção: Acessando .text
+        text: PRAYERS.gloria.text,
     });
 
     // --- 2. OS 5 MISTÉRIOS ---
 
-    // Verificamos se mysteriesOfToday é um array válido para evitar erros
     if (Array.isArray(mysteriesOfToday)) {
         mysteriesOfToday.forEach((m, index) => {
-
-            // ✅ Correção: Lida com dados locais (string) ou da API (objeto)
-            const labelMisterio = typeof m === 'string' ? m : (m.label || `Mistério ${index + 1}`);
-            const textoBiblico = typeof m === 'string' ? "" : (m.text || "");
+            const labelMisterio =
+                typeof m === "string" ? m : m.label || `Mistério ${index + 1}`;
+            const textoBiblico = typeof m === "string" ? "" : m.text || "";
+            const imagemMisterio = typeof m === "string" ? null : m.image || null;
 
             // Pai Nosso do Mistério
             sequence.push({
                 id: crypto.randomUUID(),
                 type: "pai-nosso-misterio",
                 label: "Pai Nosso",
-                text: PRAYERS.paiNosso.text, // ✅ Correção: Acessando .text
+                text: PRAYERS.paiNosso.text,
                 mysteryInfo: {
                     number: index + 1,
                     label: labelMisterio,
-                    description: textoBiblico
-                }
+                    description: textoBiblico,
+                    image: imagemMisterio,
+                },
             });
 
             // 10 Ave Marias
@@ -87,7 +93,8 @@ export function generateRosarySequence(mysteriesOfToday) {
                     id: crypto.randomUUID(),
                     type: "conta-pequena",
                     label: `${i}ª Ave Maria`,
-                    text: PRAYERS.aveMaria.text, // ✅ Correção: Acessando .text
+                    text: PRAYERS.aveMaria.text,
+                    mysteryContextImage: imagemMisterio,
                 });
             }
 
@@ -96,7 +103,7 @@ export function generateRosarySequence(mysteriesOfToday) {
                 id: crypto.randomUUID(),
                 type: "gloria",
                 label: "Glória",
-                text: PRAYERS.gloria.text, // ✅ Correção: Acessando .text
+                text: PRAYERS.gloria.text,
             });
 
             // Jaculatória
@@ -104,7 +111,7 @@ export function generateRosarySequence(mysteriesOfToday) {
                 id: crypto.randomUUID(),
                 type: "jaculatoria",
                 label: "Jaculatória",
-                text: PRAYERS.jaculatoria.text, // ✅ Correção: Acessando .text
+                text: PRAYERS.jaculatoria.text,
             });
         });
     }
@@ -114,7 +121,14 @@ export function generateRosarySequence(mysteriesOfToday) {
         id: crypto.randomUUID(),
         type: "final",
         label: "Salve Rainha",
-        text: PRAYERS.salveRainha.text, // ✅ Correção: Acessando .text
+        text: PRAYERS.salveRainha.text,
+    });
+
+    sequence.push({
+        id: crypto.randomUUID(),
+        type: "cruz", // Reusa o ícone da cruz
+        label: "Encerramento",
+        text: "Em nome do Pai, do Filho e do Espírito Santo. Amém.",
     });
 
     return sequence;

@@ -43,34 +43,94 @@ export const MYSTERIES_BY_DAY = {
     Sábado: "Gozosos",
 };
 
-// Detalhamento dos mistérios para uso offline/manual
+// Detalhamento com Imagens de Arte Sacra (URLs estáveis da Wikimedia/WGA)
 export const DETAILED_MYSTERIES = {
     Gozosos: [
-        "A Anunciação do Anjo a Maria",
-        "A Visitação de Maria a sua prima Isabel",
-        "O Nascimento de Jesus em Belém",
-        "A Apresentação de Jesus no Templo",
-        "A Perda e o Encontro de Jesus no Templo",
+        {
+            label: "A Anunciação do Anjo a Maria",
+            image: "https://upload.wikimedia.org/wikipedia/commons/5/5d/Fra_Angelico_-_Annunciation_-_WGA00438.jpg",
+        },
+        {
+            label: "A Visitação de Maria a sua prima Isabel",
+            image: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Mariotto_Albertinelli_001.jpg",
+        },
+        {
+            label: "O Nascimento de Jesus em Belém",
+            image: "https://upload.wikimedia.org/wikipedia/commons/b/b2/Gerard_van_Honthorst_-_Adoration_of_the_Shepherds_%281622%29.jpg",
+        },
+        {
+            label: "A Apresentação de Jesus no Templo",
+            image: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Presentation_of_Jesus_at_the_Temple_-_Mantegna.jpg",
+        },
+        {
+            label: "A Perda e o Encontro de Jesus no Templo",
+            image: "https://upload.wikimedia.org/wikipedia/commons/6/67/Jesus_among_the_doctors_ingres.jpg",
+        },
     ],
     Dolorosos: [
-        "A Agonia de Jesus no Horto das Oliveiras",
-        "A Flagelação de Jesus",
-        "A Coroação de Espinhos",
-        "Jesus carrega a Cruz até o Calvário",
-        "A Crucificação e Morte de Jesus",
+        {
+            label: "A Agonia de Jesus no Horto das Oliveiras",
+            image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Giovanni_Bellini_-_Agony_in_the_Garden_-_WGA01633.jpg/1280px-Giovanni_Bellini_-_Agony_in_the_Garden_-_WGA01633.jpg",
+        },
+        {
+            label: "A Flagelação de Jesus",
+            image: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Caravaggio_-_La_Flagellazione_di_Cristo.jpg",
+        },
+        {
+            label: "A Coroação de Espinhos",
+            image: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Ecce_Homo_by_Guido_Reni_%28Louvre%29.jpg",
+        },
+        {
+            label: "Jesus carrega a Cruz até o Calvário",
+            image: "https://upload.wikimedia.org/wikipedia/commons/7/73/El_Greco_-_Christ_Carrying_the_Cross_%281580%29.jpg",
+        },
+        {
+            label: "A Crucificação e Morte de Jesus",
+            image: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Vel%C3%A1zquez_-_Cristo_crucificado_%28Museo_del_Prado%2C_c._1632%29.jpg",
+        },
     ],
     Gloriosos: [
-        "A Ressurreição de Jesus",
-        "A Ascensão de Jesus ao Céu",
-        "A Vinda do Espírito Santo sobre os Apóstolos",
-        "A Assunção de Maria ao Céu",
-        "A Coroação de Maria como Rainha do Céu e da Terra",
+        {
+            label: "A Ressurreição de Jesus",
+            image: "https://upload.wikimedia.org/wikipedia/commons/6/6f/Piero_della_Francesca_046.jpg",
+        },
+        {
+            label: "A Ascensão de Jesus ao Céu",
+            image: "https://upload.wikimedia.org/wikipedia/commons/1/13/Garofalo_-_Ascension_of_Christ_-_WGA08470.jpg",
+        },
+        {
+            label: "A Vinda do Espírito Santo sobre os Apóstolos",
+            image: "https://upload.wikimedia.org/wikipedia/commons/8/87/Pentecostes_%28El_Greco%29.jpg",
+        },
+        {
+            label: "A Assunção de Maria ao Céu",
+            image: "https://upload.wikimedia.org/wikipedia/commons/e/e6/Tizian_041.jpg",
+        },
+        {
+            label: "A Coroação de Maria",
+            image: "https://upload.wikimedia.org/wikipedia/commons/4/43/Diego_Vel%C3%A1zquez_-_Coronation_of_the_Virgin_-_WGA24473.jpg",
+        },
     ],
     Luminosos: [
-        "O Batismo de Jesus no Jordão",
-        "O Milagre nas Bodas de Caná",
-        "O Anúncio do Reino de Deus e o convite à conversão",
-        "A Transfiguração de Jesus",
-        "A Instituição da Eucaristia",
+        {
+            label: "O Batismo de Jesus no Jordão",
+            image: "https://upload.wikimedia.org/wikipedia/commons/7/77/Piero_della_Francesca_044.jpg",
+        },
+        {
+            label: "O Milagre nas Bodas de Caná",
+            image: "https://upload.wikimedia.org/wikipedia/commons/3/33/Paolo_Veronese_008.jpg",
+        },
+        {
+            label: "O Anúncio do Reino de Deus",
+            image: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Sermon_on_the_Mount_Carl_Bloch.jpg",
+        },
+        {
+            label: "A Transfiguração de Jesus",
+            image: "https://upload.wikimedia.org/wikipedia/commons/9/94/Transfiguration_Raphael.jpg",
+        },
+        {
+            label: "A Instituição da Eucaristia",
+            image: "https://upload.wikimedia.org/wikipedia/commons/6/61/Leonardo_da_Vinci_-_The_Last_Supper_high_res.jpg",
+        },
     ],
 };

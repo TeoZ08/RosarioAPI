@@ -5,18 +5,20 @@ import { generateRosarySequence } from "../utils/rosaryEngine";
 import { motion, AnimatePresence } from "framer-motion";
 import "./PrayerBoard.css";
 
-function PrayerBoard({ day, mysteryData, onBack }) {
+// Adicionei a prop userIntention
+function PrayerBoard({ day, mysteryData, onBack, userIntention }) {
   const [step, setStep] = useState(() => {
+    // Reset se mudar o dia, mas tenta manter se for reload
     const saved = localStorage.getItem("rosaryStep");
     const savedDay = localStorage.getItem("rosaryDay");
     return saved && savedDay === day ? Number(saved) : 0;
   });
 
   const fullSequence = useMemo(() => {
-    return generateRosarySequence(mysteryData?.mysteries || []);
-  }, [mysteryData]);
+    // Passa a intenção para o gerador
+    return generateRosarySequence(mysteryData?.mysteries || [], userIntention);
+  }, [mysteryData, userIntention]);
 
-  // Atualiza a busca pelos índices dos mistérios com o novo tipo
   const mysteryIndices = useMemo(() => {
     return fullSequence
       .map((item, index) => (item.type === "pai-nosso-misterio" ? index : -1))
@@ -25,20 +27,37 @@ function PrayerBoard({ day, mysteryData, onBack }) {
 
   const currentPrayer = fullSequence[step] || fullSequence[0];
 
+  // Imagem ativa (do mistério atual ou herdada)
+  const activeImage =
+    currentPrayer.mysteryInfo?.image || currentPrayer.mysteryContextImage;
+
   useEffect(() => {
     localStorage.setItem("rosaryStep", step);
     localStorage.setItem("rosaryDay", day);
   }, [step, day]);
 
+  const triggerHaptic = () => {
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+  };
+
   const handleNext = useCallback(() => {
-    if (step < fullSequence.length - 1) setStep((s) => s + 1);
+    if (step < fullSequence.length - 1) {
+      triggerHaptic();
+      setStep((s) => s + 1);
+    }
   }, [step, fullSequence.length]);
 
   const handlePrev = useCallback(() => {
-    if (step > 0) setStep((s) => s - 1);
+    if (step > 0) {
+      triggerHaptic();
+      setStep((s) => s - 1);
+    }
   }, [step]);
 
   const handleJumpTo = (index) => {
+    triggerHaptic();
     setStep(index);
   };
 
@@ -59,6 +78,7 @@ function PrayerBoard({ day, mysteryData, onBack }) {
 
   const progress = ((step + 1) / fullSequence.length) * 100;
 
+  // Variantes de Animação (Cards)
   const cardVariants = {
     hidden: { opacity: 0, y: 15, scale: 0.98 },
     visible: {
@@ -75,11 +95,18 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     },
   };
 
+  // Variantes de Animação (Fundo)
+  const bgVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 1.5 } },
+    exit: { opacity: 0, transition: { duration: 1 } },
+  };
+
   const getLiturgicalName = (type) => {
     const map = {
       inicio: "Introdução",
       "conta-grande": "Pai Nosso",
-      "pai-nosso-misterio": "Mistério & Pai Nosso", // Nome combinado
+      "pai-nosso-misterio": "Anúncio do Mistério",
       "conta-pequena": "Ave Maria",
       gloria: "Glória ao Pai",
       jaculatoria: "Jaculatória",
@@ -89,7 +116,7 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     return map[type] || type;
   };
 
-  const formatFullTitle = () => {
+  const headerInfo = (() => {
     const dayMap = {
       Domingo: "Domingo",
       Segunda: "Segunda-Feira",
@@ -101,15 +128,13 @@ function PrayerBoard({ day, mysteryData, onBack }) {
     };
     const fullDay = dayMap[day] || day;
     const mysteryName = mysteryData?.mystery || "Mistério";
-
     return {
       title: `Mistérios ${mysteryName}`,
       subtitle: `(${fullDay})`,
     };
-  };
+  })();
 
-  const headerInfo = formatFullTitle();
-  const isMysteryContext = currentPrayer?.type === "pai-nosso-misterio";
+  const isMysteryAnnouncement = currentPrayer?.type === "pai-nosso-misterio";
 
   return (
     <motion.div
@@ -118,6 +143,25 @@ function PrayerBoard({ day, mysteryData, onBack }) {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
+      {/* IMAGEM DE FUNDO */}
+      <div className="sacred-art-background">
+        <AnimatePresence mode="popLayout">
+          {activeImage && (
+            <motion.img
+              key={activeImage}
+              src={activeImage}
+              alt="Arte Sacra"
+              className="art-layer"
+              variants={bgVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            />
+          )}
+        </AnimatePresence>
+        <div className="art-overlay"></div>
+      </div>
+
       <header className="board-header">
         <button onClick={onBack} className="btn-back">
           <span className="icon">✕</span> Encerrar
@@ -151,7 +195,9 @@ function PrayerBoard({ day, mysteryData, onBack }) {
             <AnimatePresence mode="wait">
               <motion.main
                 key={step}
-                className="prayer-card glass-panel"
+                className={`prayer-card glass-panel ${
+                  isMysteryAnnouncement ? "card-mystery-highlight" : ""
+                }`}
                 variants={cardVariants}
                 initial="hidden"
                 animate="visible"
@@ -166,9 +212,11 @@ function PrayerBoard({ day, mysteryData, onBack }) {
                   </span>
                 </div>
 
-                {/* SE FOR INICIO DE MISTÉRIO: MOSTRA O TÍTULO DO MISTÉRIO EM DESTAQUE */}
-                {isMysteryContext && currentPrayer.mysteryInfo && (
+                {isMysteryAnnouncement && currentPrayer.mysteryInfo && (
                   <div className="mystery-announcement">
+                    <span className="mystery-number">
+                      {currentPrayer.mysteryInfo.number}º Mistério
+                    </span>
                     <motion.h3
                       className="mystery-label-highlight"
                       initial={{ opacity: 0, y: -10 }}
@@ -177,7 +225,6 @@ function PrayerBoard({ day, mysteryData, onBack }) {
                     >
                       {currentPrayer.mysteryInfo.label}
                     </motion.h3>
-                    <p className="instruction-text">Meditamos e Rezamos</p>
                   </div>
                 )}
 
@@ -191,7 +238,10 @@ function PrayerBoard({ day, mysteryData, onBack }) {
                 </motion.h1>
 
                 <div className="prayer-text-container">
-                  <p className="prayer-text">{currentPrayer?.text}</p>
+                  {/* Renderiza quebras de linha (\n) corretamente */}
+                  <p className="prayer-text" style={{ whiteSpace: "pre-line" }}>
+                    {currentPrayer?.text}
+                  </p>
                 </div>
               </motion.main>
             </AnimatePresence>
@@ -217,7 +267,7 @@ function PrayerBoard({ day, mysteryData, onBack }) {
         </div>
 
         <aside className="shortcuts-sidebar glass-panel-sm">
-          <span className="sidebar-title">Ir para Mistério</span>
+          <span className="sidebar-title">Mistérios</span>
           <div className="shortcuts-grid">
             {mysteryIndices.map((idx, i) => {
               const nextIdx = mysteryIndices[i + 1] || fullSequence.length;
@@ -239,7 +289,7 @@ function PrayerBoard({ day, mysteryData, onBack }) {
             Início
           </button>
           <button
-            onClick={() => handleJumpTo(fullSequence.length - 5)}
+            onClick={() => handleJumpTo(fullSequence.length - 1)}
             className="btn-shortcut-text"
           >
             Final

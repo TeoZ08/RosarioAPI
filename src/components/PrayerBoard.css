@@ -4,93 +4,117 @@
   flex-direction: column;
   gap: 1rem;
   align-items: center;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* --- FUNDO IMERSIVO (ARTE SACRA) --- */
+.sacred-art-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #0f172a; /* Fallback */
+}
+
+.art-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Filtro escuro e sépia para não brigar com o texto */
+  filter: grayscale(80%) sepia(20%) brightness(0.6);
+  opacity: 0.5;
+  transition: opacity 1s ease;
+}
+
+.art-overlay {
+  position: absolute;
+  inset: 0;
+  /* Gradiente radial para focar no centro */
+  background: radial-gradient(
+    circle at center,
+    rgba(15, 23, 42, 0.7) 0%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
+  z-index: 1;
 }
 
 /* --- HEADER --- */
 .board-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
   max-width: 900px;
-  padding: 0 1rem;
+  padding: 1rem;
+  z-index: 10;
 }
 
 .header-titles {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2rem;
 }
 
 .mystery-title {
   font-family: var(--font-display);
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: var(--color-gold-metallic);
   margin: 0;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+  text-align: center;
 }
 
 .mystery-subtitle {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--color-text-secondary);
-  font-style: italic;
-  letter-spacing: 1px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.btn-back {
-  background: rgba(255, 255, 255, 0.05);
+.btn-back,
+.btn-restart {
+  background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--color-text-secondary);
-  padding: 0.5rem 1rem;
+  color: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.8rem;
-  transition: all 0.3s ease;
+  padding: 0.5rem 0.8rem;
+  transition: all 0.2s;
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 0.8rem;
 }
-.btn-back:hover {
+.btn-back:hover,
+.btn-restart:hover {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Botão Reiniciar */
 .btn-restart {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--color-gold-metallic);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-}
-.btn-restart:hover {
-  background: rgba(212, 175, 55, 0.1);
-  transform: rotate(180deg);
-  border-color: var(--color-gold-metallic);
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 1.1rem;
 }
 
-/* --- WORKSPACE (LAYOUT PRINCIPAL) --- */
+/* --- ÁREA DE ORAÇÃO --- */
 .prayer-workspace {
   display: flex;
-  flex-direction: row; /* Lado a lado */
-  align-items: flex-start;
-  justify-content: center;
   gap: 1.5rem;
   width: 100%;
   max-width: 900px;
-  padding: 0 1rem;
+  padding: 0 1rem 2rem 1rem;
+  z-index: 10;
 }
 
 .card-column {
@@ -99,113 +123,36 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 700px;
 }
 
 .card-container {
+  width: 100%;
+  min-height: 400px;
   position: relative;
-  min-height: 380px;
-  width: 100%;
 }
 
-/* --- SIDEBAR DE ATALHOS --- */
-.shortcuts-sidebar {
-  width: 140px;
-  flex-shrink: 0;
-  background: var(--color-bg-card);
-  backdrop-filter: var(--backdrop-blur);
-  -webkit-backdrop-filter: var(--backdrop-blur);
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: 16px;
-  padding: 1.5rem 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  position: sticky;
-  top: 2rem;
-}
-
-.sidebar-title {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-  letter-spacing: 1px;
-  text-align: center;
-}
-
-.shortcuts-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.8rem;
-  width: 100%;
-}
-
-.btn-shortcut {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--color-text-secondary);
-  padding: 0.8rem 0;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-.btn-shortcut:hover {
-  background: rgba(212, 175, 55, 0.1);
-  border-color: var(--color-gold-dim);
-  color: var(--color-gold-metallic);
-}
-.btn-shortcut.active {
-  background: linear-gradient(
-    135deg,
-    var(--color-gold-dim),
-    var(--color-gold-metallic)
-  );
-  color: #0f172a;
-  border: none;
-  font-weight: bold;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.shortcut-divider {
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  margin: 0.5rem 0;
-}
-
-.btn-shortcut-text {
-  background: none;
-  border: none;
-  color: var(--color-text-secondary);
-  font-size: 0.8rem;
-  cursor: pointer;
-  text-decoration: underline;
-  opacity: 0.7;
-}
-.btn-shortcut-text:hover {
-  opacity: 1;
-  color: var(--color-text-primary);
-}
-
-/* --- CARTÃO DE ORAÇÃO --- */
+/* --- CARTÃO DE ORAÇÃO (GLASSMOPHISM) --- */
 .glass-panel {
-  background: var(--color-bg-card);
-  backdrop-filter: var(--backdrop-blur);
-  -webkit-backdrop-filter: var(--backdrop-blur);
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  border-radius: 20px;
-  padding: 2.5rem 3rem;
-  width: 100%;
-  box-sizing: border-box;
+  background: rgba(13, 18, 30, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border-radius: 24px;
+  padding: 2.5rem;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+/* Destaque para anúncio de mistério */
+.card-mystery-highlight {
+  border-color: rgba(212, 175, 55, 0.3);
+  background: linear-gradient(
+    180deg,
+    rgba(20, 30, 45, 0.9),
+    rgba(13, 18, 30, 0.95)
+  );
 }
 
 .card-header {
@@ -213,80 +160,88 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 0.8rem;
 }
 
 .step-indicator {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  font-family: monospace;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .prayer-type-tag {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
   color: var(--color-gold-dim);
-  border: 1px solid rgba(212, 175, 55, 0.3);
-  padding: 4px 10px;
-  border-radius: 20px;
   background: rgba(212, 175, 55, 0.05);
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+.mystery-announcement {
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  padding-bottom: 1rem;
+  width: 100%;
+}
+
+.mystery-label-highlight {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--color-text-primary);
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .prayer-title {
   font-family: var(--font-display);
-  font-size: 2.4rem;
-  color: var(--color-gold-glow);
-  margin: 0.5rem 0 1.5rem 0;
-  line-height: 1.2;
+  font-size: 2.2rem;
+  color: #fff;
+  margin: 0.5rem 0 1.2rem 0;
+  text-shadow: 0 4px 20px rgba(212, 175, 55, 0.15);
 }
 
 .prayer-text {
   font-family: var(--font-body);
-  font-size: 1.35rem;
-  line-height: 1.8;
-  color: #e2e8f0;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: #cbd5e1; /* Cinza claro suave, melhor para leitura */
   max-width: 60ch;
   margin: 0 auto;
 }
 
-/* --- FOOTER E CONTROLES (RESTAURADOS) --- */
+/* --- FOOTER & BARRA DE PROGRESSO --- */
 .board-footer {
   width: 100%;
-  max-width: 700px;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .progress-track {
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
+  height: 3px;
+  background: rgba(255, 255, 255, 0.05);
   width: 100%;
-  margin-bottom: 2rem;
-  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-gold-dim),
-    var(--color-gold-metallic)
-  );
-  box-shadow: 0 0 10px var(--color-gold-metallic);
+  background: var(--color-gold-metallic);
+  box-shadow: 0 0 8px var(--color-gold-dim);
 }
 
-/* Container dos botões */
+/* --- CONTROLES (BOTÕES) - Esta parte faltou na versão anterior! --- */
 .controls-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   width: 100%;
 }
 
-/* Estilo Base dos Botões de Navegação */
 .btn-nav {
   font-family: var(--font-display);
   font-size: 1rem;
@@ -306,19 +261,19 @@
   filter: grayscale(1);
 }
 
-/* Botão Anterior: Sutil, Outline */
+/* Botão Anterior */
 .btn-prev {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
 }
 .btn-prev:hover:not(:disabled) {
-  border-color: var(--color-text-primary);
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Botão Próximo: Destaque, Sólido, Dourado */
+/* Botão Próximo (Dourado) */
 .btn-next {
   background: linear-gradient(
     135deg,
@@ -326,9 +281,9 @@
     #b08d28 100%
   );
   border: none;
-  color: #0f172a;
+  color: #0f172a; /* Texto escuro no fundo dourado */
   font-weight: 700;
-  flex-grow: 1; /* Ocupa mais espaço */
+  flex-grow: 1;
   justify-content: center;
   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25);
 }
@@ -337,79 +292,101 @@
   box-shadow: 0 6px 25px rgba(212, 175, 55, 0.4);
   filter: brightness(1.1);
 }
-.btn-next .icon {
+
+/* --- SIDEBAR LATERAL --- */
+.shortcuts-sidebar {
+  width: 120px;
+  flex-shrink: 0;
+  background: rgba(13, 18, 30, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  position: sticky;
+  top: 1rem;
+  height: fit-content;
+}
+
+.sidebar-title {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.btn-shortcut {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 0.6rem 0;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-shortcut:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+.btn-shortcut.active {
+  background: var(--color-gold-dim);
+  color: #000;
   font-weight: bold;
 }
 
-/* --- RESPONSIVIDADE --- */
+.shortcut-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0.2rem 0;
+}
+
+.btn-shortcut-text {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.btn-shortcut-text:hover {
+  color: #fff;
+}
+
+/* --- RESPONSIVO --- */
 @media (max-width: 850px) {
   .prayer-workspace {
     flex-direction: column;
-    align-items: center;
+    padding: 0 1rem;
   }
-
   .shortcuts-sidebar {
     width: 100%;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     position: static;
     padding: 1rem;
-    order: 2;
-    flex-wrap: wrap;
-    margin-top: 1rem;
+    background: rgba(0, 0, 0, 0.4);
   }
-
   .shortcuts-grid {
     display: flex;
-    justify-content: center;
     gap: 0.5rem;
-    width: auto;
   }
-
   .btn-shortcut {
     padding: 0.5rem 1rem;
-    font-size: 0.9rem;
   }
-
   .shortcut-divider {
     display: none;
   }
-}
-
-/* Nova instrução para o usuário */
-.instruction-text {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  font-style: italic;
-  color: var(--color-gold-dim);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 1rem;
-  opacity: 0.8;
-  display: block;
-}
-
-/* ... código anterior ... */
-
-/* Estilo para o anúncio do mistério dentro do card */
-.mystery-announcement {
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-  padding-bottom: 1rem;
-  width: 100%;
-}
-
-.mystery-label-highlight {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: var(--color-text-primary);
-  margin: 0 0 0.5rem 0;
-  font-weight: 500;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Ajuste fino na instrução para ficar dentro do bloco */
-.mystery-announcement .instruction-text {
-  margin-bottom: 0;
-  font-size: 0.75rem;
 }

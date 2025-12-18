@@ -7,6 +7,7 @@ import { MYSTERIES_BY_DAY, DETAILED_MYSTERIES } from "./data/rosaryConstants";
 
 function App() {
   const [selectedDay, setSelectedDay] = useState(null);
+  const [userIntention, setUserIntention] = useState(""); // Novo estado
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,11 +28,17 @@ function App() {
     fetchData();
   }, []);
 
-  const handleSelectDay = (day) => {
+  // Agora aceita a intenção como segundo parâmetro
+  const handleSelectDay = (day, intention) => {
     setSelectedDay(day);
+    setUserIntention(intention);
   };
 
-  // Lógica para determinar quais dados passar para o Board
+  const handleBack = () => {
+    setSelectedDay(null);
+    setUserIntention(""); // Limpa a intenção ao voltar
+  };
+
   const getMysteryDataForSelectedDay = () => {
     if (!selectedDay) return null;
 
@@ -46,7 +53,6 @@ function App() {
     ];
     const todayName = days[new Date().getDay()];
 
-    // 1. Se for HOJE, tivermos dados da API E eles forem válidos
     if (
       selectedDay === todayName &&
       apiData &&
@@ -55,9 +61,7 @@ function App() {
       return apiData;
     }
 
-    // 2. Se for outro dia (ou API falhou), usa nossa base local detalhada
     const mysteryType = MYSTERIES_BY_DAY[selectedDay] || "Mistério do Dia";
-
     return {
       mystery: mysteryType,
       mysteries: DETAILED_MYSTERIES[mysteryType] || [],
@@ -77,7 +81,8 @@ function App() {
         <PrayerBoard
           day={selectedDay}
           mysteryData={getMysteryDataForSelectedDay()}
-          onBack={() => setSelectedDay(null)}
+          userIntention={userIntention} // Passando a intenção
+          onBack={handleBack}
         />
       )}
     </div>
