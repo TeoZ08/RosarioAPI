@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./DaySelector.css";
+import { MYSTERIES_BY_DAY } from "../data/rosaryConstants";
 
-// Ícones simples (SVGs inline para facilitar)
+// Ícones SVG inline para evitar dependências extras
 const CrossIcon = () => (
   <svg
     width="40"
@@ -28,15 +29,22 @@ const DecorativeDivider = () => (
   </div>
 );
 
-function DaySelector({ onSelectDay, currentDayName, currentMystery, days }) {
+function DaySelector({ onSelectDay, currentDayName, currentMystery }) {
   const [intention, setIntention] = useState("");
 
   const handleStart = () => {
     // Passa o dia atual e a intenção para o componente pai
-    onSelectDay(currentDayName, intention);
+    // Se currentDayName não vier por prop, tenta calcular, mas idealmente vem do pai
+    const dayToStart = currentDayName || "Domingo";
+    onSelectDay(dayToStart, intention);
   };
 
-  const otherDays = Object.keys(days).filter((d) => d !== currentDayName);
+  // Garante que temos a lista de dias vinda do arquivo de constantes
+  const daysList = MYSTERIES_BY_DAY || {};
+
+  // Filtra para pegar "Outros dias" (excluindo hoje)
+  // O erro anterior estava aqui pois 'days' era undefined. Agora usamos daysList importado.
+  const otherDays = Object.keys(daysList).filter((d) => d !== currentDayName);
 
   return (
     <div className="selector-wrapper fade-in">
@@ -95,7 +103,7 @@ function DaySelector({ onSelectDay, currentDayName, currentMystery, days }) {
               onClick={() => onSelectDay(day, intention)}
             >
               <span className="day-name">{day}</span>
-              <span className="day-mystery">{days[day]}</span>
+              <span className="day-mystery">{daysList[day]}</span>
             </div>
           ))}
         </div>

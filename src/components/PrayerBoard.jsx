@@ -5,17 +5,14 @@ import { generateRosarySequence } from "../utils/rosaryEngine";
 import { motion, AnimatePresence } from "framer-motion";
 import "./PrayerBoard.css";
 
-// Adicionei a prop userIntention
 function PrayerBoard({ day, mysteryData, onBack, userIntention }) {
   const [step, setStep] = useState(() => {
-    // Reset se mudar o dia, mas tenta manter se for reload
     const saved = localStorage.getItem("rosaryStep");
     const savedDay = localStorage.getItem("rosaryDay");
     return saved && savedDay === day ? Number(saved) : 0;
   });
 
   const fullSequence = useMemo(() => {
-    // Passa a intenção para o gerador
     return generateRosarySequence(mysteryData?.mysteries || [], userIntention);
   }, [mysteryData, userIntention]);
 
@@ -27,7 +24,6 @@ function PrayerBoard({ day, mysteryData, onBack, userIntention }) {
 
   const currentPrayer = fullSequence[step] || fullSequence[0];
 
-  // Imagem ativa (do mistério atual ou herdada)
   const activeImage =
     currentPrayer.mysteryInfo?.image || currentPrayer.mysteryContextImage;
 
@@ -96,10 +92,11 @@ function PrayerBoard({ day, mysteryData, onBack, userIntention }) {
   };
 
   // Variantes de Animação (Fundo)
+  // Acelerei um pouco a duração (1.5s -> 0.8s) para não parecer que está carregando
   const bgVariants = {
     initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 1.5 } },
-    exit: { opacity: 0, transition: { duration: 1 } },
+    animate: { opacity: 1, transition: { duration: 0.8 } },
+    exit: { opacity: 0, transition: { duration: 0.5 } },
   };
 
   const getLiturgicalName = (type) => {
@@ -139,9 +136,11 @@ function PrayerBoard({ day, mysteryData, onBack, userIntention }) {
   return (
     <motion.div
       className="prayer-board"
-      initial={{ opacity: 0 }}
+      // CORREÇÃO: Removi o initial={{ opacity: 0 }} que causava o apagão na tela.
+      // Agora o conteúdo entra imediatamente.
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
+      exit={{ opacity: 0 }}
     >
       {/* IMAGEM DE FUNDO */}
       <div className="sacred-art-background">
@@ -238,7 +237,6 @@ function PrayerBoard({ day, mysteryData, onBack, userIntention }) {
                 </motion.h1>
 
                 <div className="prayer-text-container">
-                  {/* Renderiza quebras de linha (\n) corretamente */}
                   <p className="prayer-text" style={{ whiteSpace: "pre-line" }}>
                     {currentPrayer?.text}
                   </p>

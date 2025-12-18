@@ -7,11 +7,24 @@ import { MYSTERIES_BY_DAY, DETAILED_MYSTERIES } from "./data/rosaryConstants";
 
 function App() {
   const [selectedDay, setSelectedDay] = useState(null);
-  const [userIntention, setUserIntention] = useState(""); // Novo estado
+  const [userIntention, setUserIntention] = useState("");
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Busca dados de HOJE
+  // Calcula o dia da semana atual (0 = Domingo, 1 = Segunda...)
+  const daysOfWeek = [
+    "Domingo",
+    "Segunda",
+    "Terça",
+    "Quarta",
+    "Quinta",
+    "Sexta",
+    "Sábado",
+  ];
+  const todayDate = new Date();
+  const todayName = daysOfWeek[todayDate.getDay()];
+
+  // Busca dados da API (opcional, fallback para constante local)
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -28,7 +41,6 @@ function App() {
     fetchData();
   }, []);
 
-  // Agora aceita a intenção como segundo parâmetro
   const handleSelectDay = (day, intention) => {
     setSelectedDay(day);
     setUserIntention(intention);
@@ -36,23 +48,13 @@ function App() {
 
   const handleBack = () => {
     setSelectedDay(null);
-    setUserIntention(""); // Limpa a intenção ao voltar
+    setUserIntention("");
   };
 
   const getMysteryDataForSelectedDay = () => {
     if (!selectedDay) return null;
 
-    const days = [
-      "Domingo",
-      "Segunda",
-      "Terça",
-      "Quarta",
-      "Quinta",
-      "Sexta",
-      "Sábado",
-    ];
-    const todayName = days[new Date().getDay()];
-
+    // Se o dia selecionado for hoje e tivermos dados da API, usa a API
     if (
       selectedDay === todayName &&
       apiData &&
@@ -61,12 +63,18 @@ function App() {
       return apiData;
     }
 
+    // Caso contrário, usa os dados locais (fallback)
     const mysteryType = MYSTERIES_BY_DAY[selectedDay] || "Mistério do Dia";
     return {
       mystery: mysteryType,
       mysteries: DETAILED_MYSTERIES[mysteryType] || [],
     };
   };
+
+  // Define qual mistério mostrar na tela inicial (API ou Local)
+  const currentMysteryDisplay = apiData
+    ? apiData.mystery
+    : MYSTERIES_BY_DAY[todayName];
 
   if (loading) return <div className="loading">Carregando Liturgia...</div>;
 
@@ -75,13 +83,14 @@ function App() {
       {!selectedDay ? (
         <DaySelector
           onSelectDay={handleSelectDay}
-          todayMystery={apiData ? apiData.mystery : null}
+          currentDayName={todayName}
+          currentMystery={currentMysteryDisplay}
         />
       ) : (
         <PrayerBoard
           day={selectedDay}
           mysteryData={getMysteryDataForSelectedDay()}
-          userIntention={userIntention} // Passando a intenção
+          userIntention={userIntention}
           onBack={handleBack}
         />
       )}
