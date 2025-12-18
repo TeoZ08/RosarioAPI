@@ -1,284 +1,336 @@
 .selector-wrapper {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   text-align: center;
-  margin-top: 1rem;
-  animation: fadeIn 0.8s ease-out;
+  padding-bottom: 2rem;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* --- HEADER --- */
+/* --- HEADER & HERO --- */
 .hero-section {
-  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .cross-icon {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  color: var(--color-gold-dim);
-  margin-bottom: 0.2rem;
+  color: var(--color-gold-metallic);
+  margin-bottom: 0.5rem;
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.5));
 }
 
 .app-title {
   font-family: var(--font-display);
-  font-size: 3rem;
-  color: var(--color-gold-metallic);
+  font-size: 3.5rem; /* Maior e mais imponente */
+  color: var(--color-gold-glow);
   margin: 0;
-  line-height: 1;
-  background: linear-gradient(to bottom, #f9e29c, #d4af37);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(to bottom, #fffbeb 40%, #fbbf24 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
 }
 
 .app-subtitle {
   color: var(--color-text-secondary);
-  font-size: 0.95rem;
-  font-style: italic;
+  font-size: 1.1rem;
+  font-family: var(--font-body);
+  letter-spacing: 4px; /* Espaçamento elegante */
+  text-transform: uppercase;
   margin-top: 0.5rem;
-  letter-spacing: 1px;
   opacity: 0.8;
 }
 
-/* --- CARD PRINCIPAL (DESTAQUE) --- */
+/* Citação do Dia */
+.daily-quote-card {
+  margin-top: 1.5rem;
+  max-width: 80%;
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quote-text {
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.5;
+}
+
+.quote-author {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-gold-dim);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* --- CARD PRINCIPAL (Highlight) --- */
 .today-highlight {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   position: relative;
   overflow: hidden;
-  padding: 2.5rem 2rem; /* Espaçamento interno equilibrado */
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  padding: 3rem 2rem;
+  border-radius: 24px;
+  /* Fundo muito mais claro e sofisticado */
   background: linear-gradient(
-    180deg,
-    rgba(20, 30, 50, 0.85),
-    rgba(5, 10, 20, 0.95)
+    160deg,
+    rgba(30, 41, 59, 0.8) 0%,
+    rgba(15, 23, 42, 0.9) 100%
   );
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  transition: transform 0.3s ease;
 }
 
-/* Ornamentos de Fundo */
-.ornament-bg {
+/* Efeito de Luz Superior (Dourado) */
+.today-highlight::before {
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 450px;
-  height: 450px;
-  opacity: 0.08; /* Bem sutil */
-  color: var(--color-gold-metallic);
-  z-index: 0;
-  pointer-events: none;
-}
-
-.texture-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  mix-blend-mode: overlay;
-  opacity: 0.3;
-}
-
-.rotating-rosette {
-  animation: slow-spin 80s linear infinite;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-gold-metallic),
+    transparent
+  );
+  opacity: 0.8;
 }
 
-@keyframes slow-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.today-highlight:hover {
+  transform: translateY(-2px);
+  border-color: rgba(251, 191, 36, 0.3);
 }
 
-/* Conteúdo */
+/* Efeito de "Glow" interno */
+.glow-effect {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(251, 191, 36, 0.15) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
 .content-relative {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
 }
 
 .label-day {
+  background: rgba(251, 191, 36, 0.15);
+  color: var(--color-gold-metallic);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
   text-transform: uppercase;
+  font-weight: 700;
   letter-spacing: 2px;
-  font-size: 0.75rem;
-  color: var(--color-gold-dim);
-  margin-bottom: 0.5rem;
-  background: rgba(0, 0, 0, 0.4);
-  padding: 4px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 1rem;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.highlight-text {
+  font-family: var(--font-display);
+  font-size: 2.8rem; /* Aumentado */
+  color: #ffffff; /* Branco puro para contraste */
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  line-height: 1.2;
 }
 
 .mystery-today-title {
   font-family: var(--font-body);
   font-size: 1.2rem;
-  color: var(--color-text-primary);
-  margin: 0.5rem 0 1.5rem 0;
-  line-height: 1.4;
+  color: var(--color-text-muted);
+  margin: 0.5rem 0 2rem 0;
+  font-style: italic;
 }
 
-.highlight-text {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  color: var(--color-gold-metallic);
-  font-weight: 500;
-  display: block;
-  margin-top: 0.3rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-}
-
-/* --- CAMPO DE INTENÇÃO (NOVO & MELHORADO) --- */
+/* --- INPUT INTENÇÃO (Melhorado) --- */
 .intention-container {
   width: 100%;
-  max-width: 380px;
-  margin: 1rem 0 2rem 0;
+  max-width: 450px;
+  margin-bottom: 2.5rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
 }
 
 .intention-label {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1.5px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
 }
 
 .intention-input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.03); /* Quase transparente */
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Apenas linha em baixo */
-  border-radius: 4px 4px 0 0;
-  padding: 0.8rem;
-  color: var(--color-gold-glow); /* Texto dourado claro */
+  background: rgba(255, 255, 255, 0.08); /* Mais claro */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 1.2rem;
+  color: #fff;
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1.1rem;
+  text-align: center;
   resize: none;
   transition: all 0.3s ease;
-  text-align: center;
-}
-
-.intention-input::placeholder {
-  color: rgba(255, 255, 255, 0.2);
-  font-style: italic;
 }
 
 .intention-input:focus {
   outline: none;
-  background: rgba(0, 0, 0, 0.2);
-  border-bottom-color: var(--color-gold-metallic);
-  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--color-gold-metallic);
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.15);
 }
 
 .btn-large {
-  font-size: 1rem;
-  padding: 0.8rem 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 600;
-  background: linear-gradient(
-    135deg,
-    var(--color-gold-dim),
-    var(--color-gold-metallic)
-  );
-  color: #0f172a;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s, filter 0.2s;
+  font-size: 1.2rem;
+  padding: 1.2rem 4rem;
+  width: 100%;
+  max-width: 300px;
 }
-.btn-large:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
+
+/* --- DIVISOR DECORATIVO --- */
+.decorative-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  opacity: 0.5;
+  margin: 1rem 0;
+}
+
+.decorative-divider .line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-text-muted),
+    transparent
+  );
+  flex: 1;
+  max-width: 100px;
+}
+
+.decorative-divider .diamond {
+  color: var(--color-gold-dim);
+  font-size: 1.2rem;
 }
 
 /* --- GRID OUTROS DIAS --- */
 .other-days-section {
   width: 100%;
-  opacity: 0.7;
-  transition: opacity 0.3s;
-  padding-bottom: 2rem;
-}
-.other-days-section:hover {
-  opacity: 1;
 }
 
 .grid-label {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: rgba(255, 255, 255, 0.3);
-  margin-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
+  display: block;
 }
 
 .days-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.8rem;
+  gap: 1rem;
 }
 
 .day-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: var(--color-text-secondary);
-  padding: 0.8rem 0.5rem;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.2rem 0.5rem;
+  border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
+
 .day-card:hover {
-  background: rgba(212, 175, 55, 0.08);
-  border-color: var(--color-gold-dim);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-text-secondary);
+  transform: translateY(-5px);
 }
 
 .day-name {
-  font-size: 0.85rem;
+  font-family: var(--font-display);
   font-weight: 600;
-  display: block;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
 }
+
 .day-mystery {
-  font-size: 0.65rem;
-  opacity: 0.6;
-  display: block;
-  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* --- FOOTER --- */
+.app-footer {
+  margin-top: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 2rem;
+  width: 100%;
+}
+
+.app-footer p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.version {
+  font-size: 0.75rem;
+  color: var(--color-gold-dim);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.7;
 }
 
 /* Mobile */
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   .app-title {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
   }
   .days-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   .today-highlight {
-    padding: 1.5rem 1rem;
+    padding: 2rem 1rem;
+  }
+  .highlight-text {
+    font-size: 2rem;
+  }
+  .decorative-divider .line {
+    max-width: 50px;
   }
 }

@@ -1,105 +1,111 @@
 import React, { useState } from "react";
-import { MYSTERIES_BY_DAY } from "../data/rosaryConstants";
-import { GothicRosePattern, LargeRosette } from "./CatholicPattern";
 import "./DaySelector.css";
 
-function DaySelector({ onSelectDay, todayMystery }) {
-  const [intention, setIntention] = useState(""); // Estado para a intenção
+// Ícones simples (SVGs inline para facilitar)
+const CrossIcon = () => (
+  <svg
+    width="40"
+    height="40"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="cross-icon"
+  >
+    <path
+      d="M12 2V22M6 8H18"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
-  const days = [
-    "Domingo",
-    "Segunda",
-    "Terça",
-    "Quarta",
-    "Quinta",
-    "Sexta",
-    "Sábado",
-  ];
+const DecorativeDivider = () => (
+  <div className="decorative-divider">
+    <span className="line"></span>
+    <span className="diamond">❖</span>
+    <span className="line"></span>
+  </div>
+);
 
-  const todayIndex = new Date().getDay();
-  const todayName = days[todayIndex];
-  const mysteryName = todayMystery || MYSTERIES_BY_DAY[todayName];
+function DaySelector({ onSelectDay, currentDayName, currentMystery, days }) {
+  const [intention, setIntention] = useState("");
 
-  const formatDayName = (day) => {
-    if (day === "Sábado" || day === "Domingo") return day;
-    return `${day}-Feira`;
+  const handleStart = () => {
+    // Passa o dia atual e a intenção para o componente pai
+    onSelectDay(currentDayName, intention);
   };
 
-  // Envia o dia E a intenção
-  const handleStart = (day) => {
-    onSelectDay(day, intention);
-  };
+  const otherDays = Object.keys(days).filter((d) => d !== currentDayName);
 
   return (
     <div className="selector-wrapper fade-in">
-      <div className="hero-section">
-        <div className="cross-icon">†</div>
+      {/* HEADER: Título e Citação Inspiradora */}
+      <header className="hero-section">
+        <CrossIcon />
         <h1 className="app-title">Santo Rosário</h1>
-        <p className="app-subtitle">Contemplação diária e oração</p>
-      </div>
+        <p className="app-subtitle">Contemplação e Oração Diária</p>
 
-      <div className="today-highlight glass-panel">
-        <div className="ornament-bg">
-          <LargeRosette className="rotating-rosette" />
+        <div className="daily-quote-card">
+          <p className="quote-text">
+            "Não há problema, por mais difícil que seja, que não possamos
+            resolver com a oração do Santo Rosário."
+          </p>
+          <span className="quote-author">— Irmã Lúcia de Fátima</span>
         </div>
+      </header>
 
-        <div className="texture-overlay">
-          <GothicRosePattern color="#d4af37" opacity={0.15} />
-        </div>
+      {/* CARD PRINCIPAL: O Dia de Hoje */}
+      <main className="main-content">
+        <div className="today-highlight">
+          <div className="glow-effect"></div> {/* Luz de fundo */}
+          <div className="content-relative">
+            <span className="label-day">Hoje é {currentDayName}</span>
+            <h2 className="highlight-text">{currentMystery}</h2>
+            <p className="mystery-today-title">Mistérios do dia</p>
 
-        <div className="content-relative">
-          <span className="label-day">
-            Oração de Hoje • {formatDayName(todayName)}
-          </span>
+            <div className="intention-container">
+              <label className="intention-label">Sua Intenção (Opcional)</label>
+              <textarea
+                className="intention-input"
+                placeholder="Por quem ou pelo que você deseja rezar hoje?"
+                rows="1"
+                value={intention}
+                onChange={(e) => setIntention(e.target.value)}
+              />
+            </div>
 
-          <h2 className="mystery-today-title">
-            Mistérios <br />
-            <span className="highlight-text">{mysteryName}</span>
-          </h2>
-
-          {/* NOVO: Campo de Intenções */}
-          <div className="intention-container">
-            <label htmlFor="intention-input" className="intention-label">
-              Suas Intenções (Opcional)
-            </label>
-            <textarea
-              id="intention-input"
-              className="intention-input"
-              placeholder="Por quem você deseja rezar hoje? (Ex: Pela saúde da família, pela paz...)"
-              value={intention}
-              onChange={(e) => setIntention(e.target.value)}
-              rows={2}
-            />
+            <button className="btn-primary btn-large" onClick={handleStart}>
+              Iniciar Oração
+            </button>
           </div>
-
-          <button
-            className="btn-primary btn-large"
-            onClick={() => handleStart(todayName)}
-          >
-            Iniciar Oração
-          </button>
         </div>
-      </div>
+      </main>
 
-      <div className="other-days-section">
-        <div className="grid-label">Outros dias da semana</div>
+      <DecorativeDivider />
+
+      {/* SELEÇÃO DE OUTROS DIAS */}
+      <section className="other-days-section">
+        <span className="grid-label">Ou selecione outro dia</span>
         <div className="days-grid">
-          {days.map((day) => {
-            if (day === todayName) return null;
-            return (
-              <button
-                key={day}
-                // Passa a mesma intenção digitada, mesmo se escolher outro dia
-                onClick={() => handleStart(day)}
-                className="day-card"
-              >
-                <span className="day-name">{day}</span>
-                <span className="day-mystery">{MYSTERIES_BY_DAY[day]}</span>
-              </button>
-            );
-          })}
+          {otherDays.map((day) => (
+            <div
+              key={day}
+              className="day-card"
+              onClick={() => onSelectDay(day, intention)}
+            >
+              <span className="day-name">{day}</span>
+              <span className="day-mystery">{days[day]}</span>
+            </div>
+          ))}
         </div>
-      </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="app-footer">
+        <p>Desenvolvido para auxiliar sua vida de oração.</p>
+        <span className="version">v1.0 • A.M.D.G.</span>
+      </footer>
     </div>
   );
 }
